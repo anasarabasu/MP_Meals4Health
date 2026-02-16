@@ -1,0 +1,11 @@
+
+
+getInput()
+string          limit       result
+    testCase        %5s         testC
+
+logIn()
+username     password
+    admin       ad1234      valid
+    ADMIN       ad1234      invalid
+    admina      ad12345     invalid
