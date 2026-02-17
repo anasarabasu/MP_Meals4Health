@@ -30,7 +30,10 @@ students and/or persons, nor did I employ the use of AI in any part of the deliv
 #include "Tools/display.c"
 
 #include "Sections/mainMenu.c"
-#include "Sections/updateMode.c"
+
+#include "Sections/update/calFunc.c"
+#include "Sections/update/recFunc.c"
+#include "Sections/update/updateMenu.c"
 
 int main() {
     recipe recipes[50];
@@ -48,7 +51,7 @@ int main() {
 
                 int func;
                 if(state == 0)
-                    func = updateMode(&state);
+                    func = updateMenu(&state);
 
                 // func = 0;
                 updateFuncSwitch(func, food);

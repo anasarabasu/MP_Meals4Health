@@ -7,6 +7,7 @@ struct ingredientStruct {
     char unit[15];
     float calories;
 };
+
 typedef struct ingredientStruct ingredient;
 
 
@@ -22,8 +23,10 @@ struct recipeStruct {
     char instructions[15][70];
     int servings;
 };
+
 typedef struct recipeStruct recipe;
 
+#define RETURN_CONDITION (input != 'x' && input != 'X')
 
 #if !defined(_WIN32) || !defined(_WIN64)
     // linux replacement for the windows function of getch()
@@ -49,10 +52,8 @@ void clearScreen() {
 int selectionLooper(int SELECTED, int MAX) {
     int selected = SELECTED;
 
-    if(SELECTED < 0) 
-        selected = MAX;
-    if(SELECTED > MAX) 
-        selected = 0;
+    if(SELECTED < 0) selected = MAX;
+    if(SELECTED > MAX) selected = 0;
 
     return selected;
 }
@@ -85,8 +86,7 @@ int validateString(char * STRING) {
     if(strlen(STRING) > 0) {
         int index = 0;
         while(index != strlen(STRING) && !isValid) {
-            if(STRING[index] != ' ')
-                isValid = 1;
+            if(STRING[index] != ' ') isValid = 1;
             
             index++;
         }

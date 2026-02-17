@@ -23,8 +23,7 @@ int mainMenu() {
         clearScreen();
     }
 
-    if(selected == 2)
-        selected *= -1;
+    if(selected == 2) selected *= -1;
 
     return selected;
 }
