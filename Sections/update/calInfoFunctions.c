@@ -56,6 +56,7 @@ void viewCalInfo(ingredient FOOD[], int TOTAL) {
         printf(GRY "\n * [ X ] to exit\n"RESET);
         
         input = getch();
+        
         if((input == 'n' || input == 'N') && rows > 10) {
             displayOffset += 10;
             rows -= 10;

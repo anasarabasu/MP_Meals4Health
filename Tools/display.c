@@ -95,3 +95,10 @@ void addRecDisplay() {
         GRY " * Enter dish name, classification, number of servings, list of ingredients, and procedures\n\n" RESET
     );
 }
+
+void listRecipeTitlesDisplay() {
+    printf(
+        "\n"
+        "    LIST RECIPE TITLES\n\n"
+    );
+}

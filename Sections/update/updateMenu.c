@@ -46,17 +46,17 @@ int updateMenu(int *STATE) {
     string options[13] = {
         /* 00 */ "Add Food-Calorie Info",
         /* 01 */ "View Food-Calorie Chart",
-        /* 02 */ "Save Calorie Info",
-        /* 03 */ "Load Calorie Info\n",
+        /* 02 */ GRY "Save Calorie Info",
+        /* 03 */ GRY "Load Calorie Info\n",
 
         /* 04 */ "Add Recipe",
-        /* 05 */ "Modify Recipe",
-        /* 06 */ "Delete Recipe",
+        /* 05 */ GRY "Modify Recipe",
+        /* 06 */ GRY "Delete Recipe",
         /* 07 */ "List Recipe Titles",
-        /* 08 */ "Scan Recipes",
-        /* 09 */ "Search Recipe by Title",
-        /* 10 */ "Export Recipes",
-        /* 11 */ "Import Recipes\n",
+        /* 08 */ GRY "Scan Recipes",
+        /* 09 */ GRY "Search Recipe by Title",
+        /* 10 */ GRY "Export Recipes",
+        /* 11 */ GRY "Import Recipes\n",
         
         /* 12 */ "Return to Main Menu"
     };
@@ -86,7 +86,7 @@ int updateMenu(int *STATE) {
     return selected;
 }
 
-//TURN TO ARRAY
+//TURN TO LOCAL VARIABLES
 int calElements = 0;
 int recElements = 0;
 
@@ -94,7 +94,7 @@ void updateFuncSwitch(int STATE, ingredient FOOD[], recipe RECIPES[]) {
     // clearScreen();
 
     switch(STATE) {
-        // CAL
+        // CAL-INFO
         case 0: 
             addCalDisplay();
             addCalInfo(FOOD, &calElements, 50, 0); 
@@ -111,10 +111,25 @@ void updateFuncSwitch(int STATE, ingredient FOOD[], recipe RECIPES[]) {
             else
                 viewCalInfo(FOOD, calElements); 
             break;
-        // REC
+
+        // RECIPES
         case 4:
             addRecipe(RECIPES, &recElements);
             break;
+        case 7:
+            listRecipeTitlesDisplay();
+
+            if(!recElements) {
+                printf(
+                    RED " [!] List empty\n"
+                    GRY " >>> Returning back to update menu\n" RESET
+                );
+                delayedLoad();
+            }
+            else
+                listRecipeTitles(RECIPES, recElements);
+            break;
+
         
     }
 }

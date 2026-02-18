@@ -115,10 +115,10 @@ void addRecipe(recipe RECIPES[], int *INDEX) {
         //------------------------------------------
 
         printf(
-            "\n\n\n\n" LINE "\n"
+            "\n\n" LINE "\n"
             GRY
             " * [ ANY KEY ] to continue adding dishes\n"
-            " * [ X ] to finish\n"
+            " * [ X ] to return to update menu\n"
             RESET
         );
 
@@ -140,7 +140,49 @@ void addRecipe(recipe RECIPES[], int *INDEX) {
 
 // void modRec() {}
 // void deleteRec() {}
-// void listRec() {}
+
+void listRecipeTitles(recipe RECIPES[], int TOTAL) {
+    char temp[20];
+    int min = 0;
+    
+    int sortIndex = 0;
+    while(sortIndex != TOTAL - 1) {
+        int recipeIndex = sortIndex;
+        while(recipeIndex != TOTAL - 1) {
+            if(strcmp(RECIPES[min].name, RECIPES[recipeIndex + 1].name) > 0) min = recipeIndex + 1;
+            
+            recipeIndex++;
+        }
+        
+        strcpy(temp, RECIPES[sortIndex].name);
+        strcpy(RECIPES[sortIndex].name, RECIPES[min].name);
+        strcpy(RECIPES[min].name, temp);
+        
+        sortIndex++;
+        min = sortIndex;
+    }
+    
+    int printIndex = 0;
+    while(printIndex != TOTAL) {
+        printf(
+            LINE2
+            PRP "   %02d"
+            RESET "    %s\n\n", 
+            printIndex + 1, RECIPES[printIndex].name
+        );
+        
+        printIndex++;
+    }
+        
+    printf(GRY " * [ X ] to return to update menu\n" RESET);
+        
+    char input = '\0';
+    input = getch();
+    while(RETURN_CONDITION) 
+        input = getch();
+
+}
+
 // void scanRec() {}
 // void searchRec() {}
 // void exportRec() {}
