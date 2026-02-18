@@ -14,11 +14,11 @@ int mainMenu() {
         menuDisplay();
         
         selected = selectionLooper(selected, 2);
-        selectionCarousel(selected, 3, options);
+        selectionCarousel(selected, 3, options, YLW);
         printf(GRY "\n * [ ↑ / ↓ ] to navigate\n * [ ENTER ] to select\n\n" RESET);
 
         input = getch();
-        navigation(input, &selected);
+        navigation(input, &selected, 'y');
 
         clearScreen();
     }

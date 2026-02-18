@@ -65,7 +65,8 @@ int updateMenu(int *STATE) {
         adminDisplay();
         
         selected = selectionLooper(selected, 12);
-        selectionCarousel(selected, 13, options);
+        if(selected < 4 ) selectionCarousel(selected, 13, options, YLW);
+        else selectionCarousel(selected, 13, options, PRP);
         
         printf(
             GRY 
@@ -75,7 +76,7 @@ int updateMenu(int *STATE) {
         );
 
         input = getch();
-        navigation(input, &selected);
+        navigation(input, &selected, 'y');
 
         clearScreen();
     }
@@ -87,14 +88,16 @@ int updateMenu(int *STATE) {
 
 //TURN TO ARRAY
 int calElements = 0;
+int recElements = 0;
 
-void updateFuncSwitch(int STATE, ingredient FOOD[]) {
+void updateFuncSwitch(int STATE, ingredient FOOD[], recipe RECIPES[]) {
     // clearScreen();
 
     switch(STATE) {
         // CAL
         case 0: 
-            addCal(FOOD, &calElements); 
+            addCalDisplay();
+            addCalInfo(FOOD, &calElements, 50, 0); 
             break;
         case 1: 
             if(!calElements) {
@@ -106,10 +109,11 @@ void updateFuncSwitch(int STATE, ingredient FOOD[]) {
                 delayedLoad();
             }
             else
-                viewCal(FOOD, calElements); 
+                viewCalInfo(FOOD, calElements); 
             break;
         // REC
         case 4:
+            addRecipe(RECIPES, &recElements);
             break;
         
     }

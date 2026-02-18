@@ -13,14 +13,10 @@ typedef struct ingredientStruct ingredient;
 
 struct recipeStruct {
     char name[20];
-    enum classification {
-        Starter,
-        Main,
-        Dessert
-    }
+    char * classification;
 
-    ingredients[20];
-    char instructions[15][70];
+    ingredient ingredients[20];
+    char steps[15][70];
     int servings;
 };
 
@@ -58,20 +54,22 @@ int selectionLooper(int SELECTED, int MAX) {
     return selected;
 }
 
-void navigation(char INPUT, int *SELECTED) {
+void navigation(char INPUT, int *SELECTED, char DIRECTION) {
     if(INPUT == '\e') {
         getch(); // removes the ^[[
 
         switch(getch()) { // retrieves only the unique identifiers of each arrow direction
             case 'A': // up
-                (*SELECTED)--;
+                if(DIRECTION == 'y') (*SELECTED)--;
                 break;
             case 'B': // down
-                (*SELECTED)++;
+                if(DIRECTION == 'y') (*SELECTED)++;
                 break;
             case 'C':// right
+                if(DIRECTION == 'x') (*SELECTED)++;
                 break;
             case 'D': // left
+                if(DIRECTION == 'x') (*SELECTED)--;
                 break;
         }
     }
@@ -117,6 +115,3 @@ void getStringInput(char * STRING, char * IDENTIFIER, char * POS) {
     while(ch != '\n') // Consumes excess characters to avoid possible overflow error
         ch = getch();
 }
-
-
-// void getFloatInput(float *FLOAT) {}
