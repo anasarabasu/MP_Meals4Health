@@ -2,15 +2,15 @@
 //  @RETURNS the index for the state option selected
 int mainMenu() {
     int selected = 0;
-    char input = '\0';
-
+    
     string options[3] = {
         "Update Recipe Box",
         "Access Recipe Box",
         "Exit Program"
     };
 
-    while(input != '\n') { // selection carousel
+    char input;
+    while(!INPUT_ENTER) { // selection carousel
         menuDisplay();
         
         selected = selectionLooper(selected, 2);

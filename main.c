@@ -48,13 +48,13 @@ int main() {
                 state = mainMenu();
                 break;
             case 0: {
-                // state = logIn();
+                state = logIn();
 
                 int func;
                 if(state == 0)
                     func = updateMenu(&state);
 
-                // func = 0;
+                func = 0;
                 updateFuncSwitch(func, food,  recipes);
                 break;
             }

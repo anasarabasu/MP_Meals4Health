@@ -1,6 +1,6 @@
 #define RESET "\e[0m"
 #define BLINK "\e[5m"
-#define GRY "\e[30m"
+#define GRY "\e[1;30m"
 #define RED "\e[31m"
 #define GRN "\e[32m"
 #define YLW "\e[33m"

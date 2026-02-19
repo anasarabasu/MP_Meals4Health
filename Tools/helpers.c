@@ -1,3 +1,5 @@
+#define TEST printf("TEST");
+
 typedef char string[30];
 
 
@@ -22,7 +24,14 @@ struct recipeStruct {
 
 typedef struct recipeStruct recipe;
 
+
 #define RETURN_CONDITION (input != 'x' && input != 'X')
+
+#if defined(_WIN32) || defined(_WIN64) 
+    #define INPUT_ENTER (input == '\r')
+#else 
+    #define INPUT_ENTER (input == '\n')
+#endif
 
 #if !defined(_WIN32) || !defined(_WIN64)
     // linux replacement for the windows function of getch()
@@ -54,25 +63,49 @@ int selectionLooper(int SELECTED, int MAX) {
     return selected;
 }
 
-void navigation(char INPUT, int *SELECTED, char DIRECTION) {
-    if(INPUT == '\e') {
-        getch(); // removes the ^[[
+#define UP 72
+#define DOWN 80
+#define RIGHT 77
+#define LEFT 75
 
-        switch(getch()) { // retrieves only the unique identifiers of each arrow direction
-            case 'A': // up
+void navigation(char INPUT, int *SELECTED, char DIRECTION) {
+    #if defined(_WIN32) || defined(_WIN64)
+        switch(INPUT) {
+            case UP:
                 if(DIRECTION == 'y') (*SELECTED)--;
                 break;
-            case 'B': // down
+            case DOWN:
                 if(DIRECTION == 'y') (*SELECTED)++;
                 break;
-            case 'C':// right
+            case RIGHT:
                 if(DIRECTION == 'x') (*SELECTED)++;
                 break;
-            case 'D': // left
+            case LEFT:
                 if(DIRECTION == 'x') (*SELECTED)--;
                 break;
         }
-    }
+
+    #else
+        if(INPUT == '\e') {
+            getch(); // removes the ^[[
+                
+            switch(getch()) { // retrieves only the unique identifiers of each arrow direction
+                case 'A': // up
+                    if(DIRECTION == 'y') (*SELECTED)--;
+                    break;
+                case 'B': // down
+                    if(DIRECTION == 'y') (*SELECTED)++;
+                    break;
+                case 'C':// right
+                    if(DIRECTION == 'x') (*SELECTED)++;
+                    break;
+                case 'D': // left
+                    if(DIRECTION == 'x') (*SELECTED)--;
+                    break;
+            }
+        }
+
+    #endif
 }
 
 
