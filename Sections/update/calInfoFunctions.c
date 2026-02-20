@@ -1,7 +1,7 @@
-void addCalInfo(ingredient FOOD[], int *INDEX, int MAX, int INDENT) {
-    addIngredient(FOOD, INDEX, MAX, INDENT);
+void addCalInfo(ingredient FOOD[], int *INDEX) {
+    printf("\nADD CALORIE INFO\n" RESET); 
 
-    if(*INDEX == MAX) {
+    if(*INDEX == 50) {
         printf(
             "\n" LINE 
             RED "\n [!] List full\n"
@@ -9,16 +9,23 @@ void addCalInfo(ingredient FOOD[], int *INDEX, int MAX, int INDENT) {
         );
         delayedLoad();
     }
+    else {
+        printf(GRY " * Enter food item, quantity, unit, and calorie count\n\n" RESET);
+        addIngredient(FOOD, INDEX, 50, 0);
+    }
 }
 
-void viewCalInfo(ingredient FOOD[], int TOTAL) {
+void viewCalInfo(ingredient FOOD[], int INDEX) {
     char input = '\0';
 
-    int rows = TOTAL;
+    int rows = INDEX;
     int displayOffset = 0;
     
-    while(RETURN_CONDITION) {
-        viewCalDisplay();
+    while(INPUT_EXIT) {
+    printf(
+        "\n"
+        "    VIEW CALORIE INFO\n\n"
+    );
         
         char * col[4]= {
             "FOOD ITEM",
@@ -66,7 +73,7 @@ void viewCalInfo(ingredient FOOD[], int TOTAL) {
             rows += 10;
         }
 
-        clearScreen();
+        WIPE
     }
 }
 

@@ -11,7 +11,7 @@ void addRecipe(recipe RECIPES[], int *INDEX) {
     };
 
     int recipeIndex = *INDEX;
-    while(recipeIndex < 50 && RETURN_CONDITION) {
+    while(recipeIndex < 50 && INPUT_EXIT) {
         printf(PRP "    Dish Name: " GRY " (%d out of 50)\n    " RESET, recipeIndex + 1);
         getStringInput(RECIPES[recipeIndex].name, "%[^\n]20s", "\e[1F\e[5G");
 
@@ -123,10 +123,10 @@ void addRecipe(recipe RECIPES[], int *INDEX) {
         );
 
         input = getch();
-        while(input != '\n' && RETURN_CONDITION) 
+        while(input != '\n' && INPUT_EXIT) 
             input = getch();
         
-        if(RETURN_CONDITION)
+        if(INPUT_EXIT)
             input = '\0'; // Resets the input, important to not skip the following classification prompt
 
         recipeIndex++;
@@ -178,7 +178,7 @@ void listRecipeTitles(recipe RECIPES[], int TOTAL) {
         
     char input = '\0';
     input = getch();
-    while(RETURN_CONDITION) 
+    while(INPUT_EXIT) 
         input = getch();
 
 }

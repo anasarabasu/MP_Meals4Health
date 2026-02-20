@@ -1,32 +1,34 @@
 // Asks and validates the log-in credentials
-// @RETURNS 0 if log-in details are valid RETURNS -1 if not, matching the state indices
+//
+// @RETURNS 0 if log-in details are valid RETURNS -1 if not, matching the mode indices
 int logIn() {
-    logInDisplay();
+    printf(
+        "\n"
+        "ADMIN LOG IN SCREEN\n"
+        "\n"
+    );
 
     char userName[7];
     printf(YLW "    Username: " RESET);
-    getStringInput(userName, "%[^\n]6s", "\e[1F\e[15G");
+    getStringInput(userName, "%6[^\n]s", "\e[1F\e[15G");
 
     char pass[8];
     printf(YLW "    Password: " RESET);
-    getStringInput(pass, "%[^\n]7s", "\e[1F\e[15G");
+    getStringInput(pass, "%7[^\n]s", "\e[1F\e[15G");
 
-    int isValid = 0;
+    int canProceed = 0;
     if(strcmp(userName, "admin") || strcmp(pass, "ad1234")) {
-        printf(
-            "\n"            
-            RED " [!] Invalid username or password entered\n" 
+        printf(          
+            RED "\n [!] Invalid username or password entered\n" 
             GRY " >>> Returning back to main menu\n" 
             RESET
         );
         
-        isValid = -1;
+        canProceed = -1;
     }
-
     else {
         printf(
-            "\n"
-            GRN " [O] User validated!\n"
+            GRN "\n [O] User validated!\n"
             GRY " >>> Proceeding to update mode\n"
             RESET
         );
@@ -34,13 +36,12 @@ int logIn() {
 
     delayedLoad();   
 
-    return isValid;
+    return canProceed;
 }
 
 // 
-// @param *STATE - address that determines the current state and displayed screen
-int updateMenu(int *STATE) {
-    int selected = 0;
+int updateMenu() {
+    int option = 0;
     char input = '\0';
     
     string options[13] = {
@@ -61,12 +62,16 @@ int updateMenu(int *STATE) {
         /* 12 */ "Return to Main Menu"
     };
     
-    while(input != '\n') {
-        adminDisplay();
+    while(!INPUT_ENTER) {
+        printf(
+            "\n"
+            "    UPDATE MODE\n"
+            "\n"
+        );
         
-        selected = selectionLooper(selected, 12);
-        if(selected < 4 ) selectionCarousel(selected, 13, options, YLW);
-        else selectionCarousel(selected, 13, options, PRP);
+        option = selectionLooper(option, 12);
+        if(option < 4 ) selectionCarousel(option, 13, options, YLW);
+        else selectionCarousel(option, 13, options, PRP);
         
         printf(
             GRY 
@@ -76,32 +81,31 @@ int updateMenu(int *STATE) {
         );
 
         input = getch();
-        navigation(input, &selected, 'y');
+        navigation(input, &option, 'y');
 
-        clearScreen();
+        WIPE
     }
 
-    if(selected == 12) *STATE = -1;
+    if(option == 12) option = -1;
 
-    return selected;
+    return option;
 }
 
-//TURN TO LOCAL VARIABLES
-int calElements = 0;
-int recElements = 0;
+// //TURN TO LOCAL VARIABLES
 
-void updateFuncSwitch(int STATE, ingredient FOOD[], recipe RECIPES[]) {
-    // clearScreen();
+void updateFuncSwitch(int OPTION, ingredient FOOD[], int *F_ELEM, recipe RECIPES[], int *R_ELEM) {
+    
+    WIPE
 
-    switch(STATE) {
+    enum calInfoOptions option = OPTION;
+    switch(option) {
         // CAL-INFO
-        case 0: 
-            addCalDisplay();
-            addCalInfo(FOOD, &calElements, 50, 0); 
+        case ADD_CAL: 
+            addCalInfo(FOOD, F_ELEM); 
             break;
-        case 1: 
-            if(!calElements) {
-                addCalDisplay();
+        case VIEW_CAL: 
+            if(!(*F_ELEM)) {
+                // addCalDisplay();
                 printf(
                     RED " [!] List empty\n"
                     GRY " >>> Returning back to update menu\n" RESET
@@ -109,26 +113,35 @@ void updateFuncSwitch(int STATE, ingredient FOOD[], recipe RECIPES[]) {
                 delayedLoad();
             }
             else
-                viewCalInfo(FOOD, calElements); 
+                viewCalInfo(FOOD, *F_ELEM); 
             break;
+        case SAVE_CAL: break;
+        case LOAD_CAL: break;
+        case ADD_REC: break;
+        case MOD_REC: break;
+        case DEL_REC: break;
+        case LIST_REC: break;
+        case SCAN_REC: break;
+        case SEARCH_REC: break;
+        case EXPORT_REC: break;
+        case IMPORT_REC: break;
+        // // RECIPES
+        // case 4:
+        //     addRecipe(RECIPES, &recElements);
+        //     break;
+        // case 7:
+        //     listRecipeTitlesDisplay();
 
-        // RECIPES
-        case 4:
-            addRecipe(RECIPES, &recElements);
-            break;
-        case 7:
-            listRecipeTitlesDisplay();
-
-            if(!recElements) {
-                printf(
-                    RED " [!] List empty\n"
-                    GRY " >>> Returning back to update menu\n" RESET
-                );
-                delayedLoad();
-            }
-            else
-                listRecipeTitles(RECIPES, recElements);
-            break;
+        //     if(!recElements) {
+        //         printf(
+        //             RED " [!] List empty\n"
+        //             GRY " >>> Returning back to update menu\n" RESET
+        //         );
+        //         delayedLoad();
+        //     }
+        //     else
+        //         listRecipeTitles(RECIPES, recElements);
+        //     break;
 
         
     }

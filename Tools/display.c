@@ -1,3 +1,5 @@
+#define WIPE printf("\e[H\e[0J");
+
 #define RESET "\e[0m"
 #define BLINK "\e[5m"
 #define GRY "\e[1;30m"
@@ -10,25 +12,15 @@
 #define LINE2 " --------------------------------------------------------------------------------------------------------------------\n"
 #define LINE3 " ----------------------------------------------------------------------\n"
 
-void delayedLoad() {
-    int index = 0;
-
-    while(index != 3) {
-        sleep(1);
-        printf(GRY " .\n" RESET);
-        index++;
-    }
-
-    clearScreen();
-}
-
+// Handles the rotating menu options display
 //
 // @param SELECTED - index of currently selected option
 // @param MAX - total total number of options to choose from
 // @param OPTIONS - string array of options to be displayed
 void selectionCarousel(int SELECTED, int MAX, string OPTIONS[], char * COLOUR) {
-    int selectionDisplayIndex = 0;
-    while(selectionDisplayIndex != MAX) {
+    int selectionDisplayIndex;
+
+    for(selectionDisplayIndex = 0; selectionDisplayIndex != MAX; selectionDisplayIndex++) {
         if(SELECTED == selectionDisplayIndex) {
             if(SELECTED == MAX - 1) printf(RED " >>> " BLINK);
             else printf("%s >>> " BLINK, COLOUR);
@@ -36,55 +28,20 @@ void selectionCarousel(int SELECTED, int MAX, string OPTIONS[], char * COLOUR) {
         else printf("    ");
 
         printf("%s\n" RESET, OPTIONS[selectionDisplayIndex]);
-
-        selectionDisplayIndex++;
     }
 }
 
-//------------------------------------------
+// Dot dot dot
+void delayedLoad() {
+    int index;
+    for(index = 0; index != 3; index++) {
+        sleep(1);
+        printf(GRY " .\n" RESET);
+    }
 
-void menuDisplay() {
-    printf(
-        "\n"
-        "    MENU SELECTION SCREEN\n"
-        "\n"
-    );
+    WIPE
 }
 
-//------------------------------------------
-
-void logInDisplay() {
-    printf(
-        "\n"
-        "    ADMIN LOG IN SCREEN\n"
-        "\n"
-    );
-}
-
-void adminDisplay() {
-    printf(
-        "\n"
-        "    UPDATE MODE\n"
-        "\n"
-    );
-}
-
-//------------------------------------------
-
-void addCalDisplay() {
-    printf(
-        "\n"
-        "   ADD CALORIE INFO\n\n"
-        GRY " * Enter food item, quantity, unit, and calorie count\n\n" RESET
-    );
-}
-
-void viewCalDisplay() {
-    printf(
-        "\n"
-        "    VIEW CALORIE INFO\n\n"
-    );
-}
 
 //------------------------------------------
 

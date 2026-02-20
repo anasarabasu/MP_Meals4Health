@@ -9,22 +9,9 @@ students and/or persons, nor did I employ the use of AI in any part of the deliv
 *********************************************************************************************************/
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-
-//this is here for cross compatibility testing because i'm on linux :)
-#if defined(_WIN32) || defined(_WIN64)
-    #include <conio.h>
-
-    #include <windows.h>
-    #define sleep(seconds) Sleep((seconds)*1000)
-
-#else 
-
-    #include <unistd.h>
-    #define sleep(seconds) sleep(seconds)
-
-#endif
+#include <conio.h>
+#include <windows.h>
 
 #include "Tools/helpers.c"
 #include "Tools/display.c"
@@ -37,31 +24,35 @@ students and/or persons, nor did I employ the use of AI in any part of the deliv
 #include "Sections/update/updateMenu.c"
 
 int main() {
-    recipe recipes[50];
-    ingredient food[50];
-    // int state = -1;
-    int state = 0;
+    SetConsoleOutputCP(65001); // allows displaying of UNICODE characters
 
-    while(state != -2) { // program loop
-        switch(state) { 
+    ingredient food[50];
+    int fElem = 0;
+
+    recipe recipes[50];
+    int rElem = 0;
+
+    int mode = -1;
+    mode = 0;
+    while(mode != -2) { // program loop
+        switch(mode) { 
             case -1: 
-                state = mainMenu();
+                mode = mainMenu();
                 break;
             case 0: {
-                state = logIn();
+                // mode = logIn();
 
-                int func;
-                if(state == 0)
-                    func = updateMenu(&state);
+                int option;
+                if(mode == 0) option = updateMenu();
+                if(option == -1) mode = -1;
 
-                func = 0;
-                updateFuncSwitch(func, food,  recipes);
+                updateFuncSwitch(option, food, &fElem, recipes, &rElem);
                 break;
             }
             
             case 1:
                 printf("Access recipe unimplemented\n");
-                state = 0;
+                mode = 0;
                 break;
             default: 
                 printf(" >>> Program stuck in a loop");
@@ -69,11 +60,10 @@ int main() {
             break;
         }
         
-        clearScreen();
+        WIPE
     }
 
     printf(" >>> Program terminated\n");
-    sleep(1);
 
     return 0;
 }

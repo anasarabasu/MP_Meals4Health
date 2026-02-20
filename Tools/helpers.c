@@ -1,7 +1,4 @@
-#define TEST printf("TEST");
-
 typedef char string[30];
-
 
 struct ingredientStruct {
     char item[20];
@@ -9,9 +6,7 @@ struct ingredientStruct {
     char unit[15];
     float calories;
 };
-
 typedef struct ingredientStruct ingredient;
-
 
 struct recipeStruct {
     char name[20];
@@ -21,130 +16,101 @@ struct recipeStruct {
     char steps[15][70];
     int servings;
 };
-
 typedef struct recipeStruct recipe;
 
+#define sleep(seconds) Sleep((seconds)*1000)
 
-#define RETURN_CONDITION (input != 'x' && input != 'X')
-
-#if defined(_WIN32) || defined(_WIN64) 
-    #define INPUT_ENTER (input == '\r')
-#else 
-    #define INPUT_ENTER (input == '\n')
-#endif
-
-#if !defined(_WIN32) || !defined(_WIN64)
-    // linux replacement for the windows function of getch()
-    char getch() { 
-        system("stty -icanon -echo");
-        char key = getchar();
-        system("stty icanon echo");
-
-        return key;
-    }
-#endif
+#define INPUT_EXIT (input == 'x' || input == 'X')
+#define INPUT_ENTER (input == '\r')
 
 
-void clearScreen() {
-    #if defined(_WIN32) || defined(_WIN64) 
-        system("cls");
-    #else 
-        system("clear");
-    #endif
-}
+enum calInfoOptions {
+    ADD_CAL,
+    VIEW_CAL,
+    SAVE_CAL,
+    LOAD_CAL,
+
+    ADD_REC,
+    MOD_REC,
+    DEL_REC,
+    LIST_REC,
+    SCAN_REC,
+    SEARCH_REC,
+    EXPORT_REC,
+    IMPORT_REC
+};
 
 
+// Resets the selection when it exceeds the range
+//
+// @param SELCTED - the current option index selected
+// @param MAX - the total number of options
+//
+// @RETURN the in-range selection index
 int selectionLooper(int SELECTED, int MAX) {
     int selected = SELECTED;
-
     if(SELECTED < 0) selected = MAX;
     if(SELECTED > MAX) selected = 0;
 
     return selected;
 }
 
-#define UP 72
-#define DOWN 80
-#define RIGHT 77
-#define LEFT 75
-
+// Increments the selected index according only to the arrow key input type
+//
+// @param INPUT - the character returned from the input call
+// @param *SELECTED - pointer to the selected index
+// @param DIRECTION - determines if navigation goes vertically or horizontally
 void navigation(char INPUT, int *SELECTED, char DIRECTION) {
-    #if defined(_WIN32) || defined(_WIN64)
-        switch(INPUT) {
-            case UP:
-                if(DIRECTION == 'y') (*SELECTED)--;
-                break;
-            case DOWN:
-                if(DIRECTION == 'y') (*SELECTED)++;
-                break;
-            case RIGHT:
-                if(DIRECTION == 'x') (*SELECTED)++;
-                break;
-            case LEFT:
-                if(DIRECTION == 'x') (*SELECTED)--;
-                break;
-        }
-
-    #else
-        if(INPUT == '\e') {
-            getch(); // removes the ^[[
-                
-            switch(getch()) { // retrieves only the unique identifiers of each arrow direction
-                case 'A': // up
-                    if(DIRECTION == 'y') (*SELECTED)--;
-                    break;
-                case 'B': // down
-                    if(DIRECTION == 'y') (*SELECTED)++;
-                    break;
-                case 'C':// right
-                    if(DIRECTION == 'x') (*SELECTED)++;
-                    break;
-                case 'D': // left
-                    if(DIRECTION == 'x') (*SELECTED)--;
-                    break;
-            }
-        }
-
-    #endif
+    switch(INPUT) {
+        case 72: // up
+            if(DIRECTION == 'y') (*SELECTED)--;
+            break;
+        case 80: // down
+            if(DIRECTION == 'y') (*SELECTED)++;
+            break;
+        case 77: // right
+            if(DIRECTION == 'x') (*SELECTED)++;
+            break;
+        case 75: // left
+            if(DIRECTION == 'x') (*SELECTED)--;
+            break;
+    }
 }
 
-
-// Checks if input string is empty "\n" or contains only spaces
-// @RETURN 0 if found empty or pure spaces & RETURN 1 if contains alphanumerical characters
-int validateString(char * STRING) {
-    int isValid = 0;
-
-    if(strlen(STRING) > 0) {
-        int index = 0;
-        while(index != strlen(STRING) && !isValid) {
-            if(STRING[index] != ' ') isValid = 1;
-            
-            index++;
-        }
-    }
-
-    if(!isValid) {
-        getch(); // consumes the \n to prevent an infinite loop
-        strcpy(STRING, "\0");
-    }
-
-    return isValid;
+// Consumes excess characters to avoid overflow error or input buffer leaking to the next scanf
+void clearBuffer() {
+    scanf("%*[^\n]"); 
+    getchar();
 }
 
 // Handles all scanf events for strings
-// Also moves the cursor to last position to prevent the ugly newline that scanf results in with empty inputs
+// Ensures that the string input contains atleast 1 character that's not a whitespace
+// Also moves the cursor to last position to prevent the empty newline with enter keys
+//
 // @param STRING - address where string input is stored
 // @param IDENTIFIER - specified length of string termination + string scanset
 // @param POS
 void getStringInput(char * STRING, char * IDENTIFIER, char * POS) {
     scanf(IDENTIFIER, STRING);
 
-    while(!validateString(STRING)) {
-        printf(POS); // moves cursor back to previous position using escape characters
-        scanf(IDENTIFIER, STRING);
-    }
+    int isValid = 0;
+    while(!isValid) {
+        int length = strlen(STRING);
+        if(length > 0) {
+            int index;
+            for(index = length; index != 0; index--) {
+                if(STRING[index] != ' ') isValid = 1;
+                else STRING[index] = '\0';
+            }
 
-    char ch = getch();
-    while(ch != '\n') // Consumes excess characters to avoid possible overflow error
-        ch = getch();
+        }
+
+        if(!isValid) {
+            clearBuffer();
+
+            printf(POS); // moves cursor back to previous position using escape characters
+            scanf(IDENTIFIER, STRING);
+        }
+    }
+    clearBuffer();
 }

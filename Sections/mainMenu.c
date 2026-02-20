@@ -1,29 +1,34 @@
-// Processes arrow key input for option navigation
-//  @RETURNS the index for the state option selected
+// menu handler for choosing between the modes
+//
+// @RETURN the chosen mode option or exit the program
 int mainMenu() {
-    int selected = 0;
-    
     string options[3] = {
         "Update Recipe Box",
         "Access Recipe Box",
         "Exit Program"
     };
 
+    int mode = 0;
+
     char input;
     while(!INPUT_ENTER) { // selection carousel
-        menuDisplay();
+        printf(
+            "\n"
+            "MENU SELECTION SCREEN\n"
+            "\n"
+        );
         
-        selected = selectionLooper(selected, 2);
-        selectionCarousel(selected, 3, options, YLW);
+        mode = selectionLooper(mode, 2);
+        selectionCarousel(mode, 3, options, YLW);
         printf(GRY "\n * [ ↑ / ↓ ] to navigate\n * [ ENTER ] to select\n\n" RESET);
 
         input = getch();
-        navigation(input, &selected, 'y');
+        navigation(input, &mode, 'y');
 
-        clearScreen();
+        WIPE
     }
 
-    if(selected == 2) selected *= -1;
+    if(mode == 2) mode *= -1;
 
-    return selected;
+    return mode;
 }
