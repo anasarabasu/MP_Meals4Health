@@ -13,6 +13,21 @@ students and/or persons, nor did I employ the use of AI in any part of the deliv
 #include <conio.h>
 #include <windows.h>
 
+// #define WIPE system("cls");
+#define WIPE printf("\e[H\e[0J");
+
+#define RESET "\e[0m"
+#define BLINK "\e[5m"
+#define GRY "\e[1;30m"
+#define RED "\e[31m"
+#define GRN "\e[32m"
+#define YLW "\e[33m"
+#define PRP "\e[35m"
+
+#define LINE "======================================================================================================================\n"
+#define LINE2 " --------------------------------------------------------------------------------------------------------------------\n"
+#define LINE3 " ----------------------------------------------------------------------\n"
+
 #include "Tools/helpers.c"
 #include "Tools/display.c"
 
@@ -22,6 +37,8 @@ students and/or persons, nor did I employ the use of AI in any part of the deliv
 #include "Sections/update/calInfoFunctions.c"
 #include "Sections/update/recipeFunctions.c"
 #include "Sections/update/updateMenu.c"
+
+
 
 int main() {
     SetConsoleOutputCP(65001); // allows displaying of UNICODE characters
@@ -59,20 +76,11 @@ int main() {
                 getch();
             break;
         }
-        
-        WIPE
+
+        system("cls");
     }
 
     printf(" >>> Program terminated\n");
 
     return 0;
 }
-
-/*
-MISC
-
-[ ] ascii text art
-[ ] split view - view a pic? and brief description of each option
-[ ] add button noises
-
-*/

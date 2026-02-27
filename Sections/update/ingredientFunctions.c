@@ -10,14 +10,11 @@ void addIngredient(ingredient INGREDIENT[], int *INDEX, int MAX, int INDENT) {
             indent, ingredientIndex + 1, MAX, indent
         );
 
-        if(INDENT) {
-            if(!ingredientIndex) printf("\n");
-            getStringInput(INGREDIENT[ingredientIndex].item, "%20[^\n]s", "\e[1F\e[9G");
-        }
-        else {
-            if(ingredientIndex) printf("\n");
-            getStringInput(INGREDIENT[ingredientIndex].item, "%20[^\n]s", "\e[1F\e[5G");
-        }
+        if(INDENT) getStringInput(INGREDIENT[ingredientIndex].item, "%20[^\n]s", "\e[1F\e[9G");
+            // if(!ingredientIndex) printf("\n");
+        
+        else getStringInput(INGREDIENT[ingredientIndex].item, "%20[^\n]s", "\e[1F\e[5G");
+        
         
         int isUnique = 1;
         do {
@@ -46,25 +43,31 @@ void addIngredient(ingredient INGREDIENT[], int *INDEX, int MAX, int INDENT) {
         }
         while(!isUnique);
         printf("\e[1F\e[20G\t\t\e[0J\n"); // removes the [!] comment
+        clearBuffer();
+
 
         //------------------------------------------
         
-        printf(YLW "\n%s    Quantity:\n\n%s    " RESET, indent, indent);
-        if(INDENT) getIntInput(&INGREDIENT[ingredientIndex].quantity, "\e[9G" RESET, RED);
-        else getIntInput(&INGREDIENT[ingredientIndex].quantity, "\e[5G" RESET, RED);
+        printf(YLW "\n%s    Quantity:\n%s    " RESET, indent, indent);
+        if(INDENT) getIntInput(&INGREDIENT[ingredientIndex].quantity, "\e[9G" RESET);
+        else getIntInput(&INGREDIENT[ingredientIndex].quantity, "\e[5G" RESET);
+        clearBuffer();
 
         
         //------------------------------------------
 
-        printf(YLW "\n%s    Unit:\n\n%s    " RESET, indent, indent);
+        printf(YLW "\n%s    Unit:\n%s    " RESET, indent, indent);
         if(INDENT) getStringInput(INGREDIENT[ingredientIndex].unit, "%20[^\n]s", "\e[1F\e[9G");
         else getStringInput(INGREDIENT[ingredientIndex].unit, "%20[^\n]s", "\e[1F\e[5G");
+        clearBuffer();
         
+
         //------------------------------------------
         
-        printf(YLW "\n%s    Calorie Count:\n\n%s    " RESET, indent, indent);
-        if(INDENT) getIntInput(&INGREDIENT[ingredientIndex].calories, "\e[9G" RESET, RED);
-        else getIntInput(&INGREDIENT[ingredientIndex].calories, "\e[5G" RESET, RED);
+        printf(YLW "\n%s    Calorie Count:\n%s    " RESET, indent, indent);
+        if(INDENT) getIntInput(&INGREDIENT[ingredientIndex].calories, "\e[9G" RESET);
+        else getIntInput(&INGREDIENT[ingredientIndex].calories, "\e[5G" RESET);
+        clearBuffer();
         
         //------------------------------------------
 
@@ -98,11 +101,12 @@ void addStep(char STEPS[15][71], int *INDEX, int MAX, int INDENT) {
     char indent[5] = "";
     if(INDENT) strcpy(indent, "    ");
 
-    char input = '\0';
+    char input;
 
     int stepIndex = *INDEX;
-    while(stepIndex < MAX && INPUT_EXIT) {
+    while(stepIndex < MAX && !INPUT_EXIT) {
         printf(YLW "\n%s    Step #%d: " GRY "(out of %d)" "\n%s    " RESET, indent, stepIndex + 1, MAX + 1, indent);
+
         if(INDENT) {
             getStringInput(STEPS[stepIndex], "%[^\n]70s", "\e[1F\e[9G");
         }
@@ -118,7 +122,7 @@ void addStep(char STEPS[15][71], int *INDEX, int MAX, int INDENT) {
         );
 
         input = getch();
-        while(input != '\n' && INPUT_EXIT) 
+        while(!INPUT_ENTER && !INPUT_EXIT) 
             input = getch();
 
         stepIndex++;

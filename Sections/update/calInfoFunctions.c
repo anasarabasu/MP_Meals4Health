@@ -16,17 +16,17 @@ void addCalInfo(ingredient FOOD[], int *INDEX) {
 }
 
 void viewCalInfo(ingredient FOOD[], int INDEX) {
-    char input = '\0';
+    char input;
 
     int rows = INDEX;
     int displayOffset = 0;
     
-    while(INPUT_EXIT) {
-    printf(
-        "\n"
-        "    VIEW CALORIE INFO\n\n"
-    );
-        
+    while(!INPUT_EXIT) {
+        printf(
+            "\n"
+            "    VIEW CALORIE INFO\n\n"
+        );
+
         char * col[4]= {
             "FOOD ITEM",
             "QUANTITY",
@@ -45,7 +45,7 @@ void viewCalInfo(ingredient FOOD[], int INDEX) {
         int displayIndex = 0;
         while(displayIndex < 10 && displayIndex != rows) {
             printf(
-                " |  %02d  |    %-19s    ||    %-18.2d    ||    %-14s    ||    %-18.2d    |\n"
+                " |  %02d  |    %-19s    ||    %-18d    ||    %-14s    ||    %-18d    |\n"
                 " |      |    %-19s    ||    %-18s    ||    %-14s    ||    %-18s    |\n"
                 LINE2, 
                 displayIndex + 1 + displayOffset,

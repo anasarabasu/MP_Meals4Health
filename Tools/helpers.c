@@ -20,8 +20,8 @@ typedef struct recipeStruct recipe;
 
 #define sleep(seconds) Sleep((seconds)*1000)
 
-#define INPUT_EXIT (input == 'x' || input == 'X')
 #define INPUT_ENTER (input == '\r')
+#define INPUT_EXIT (input == 'x' || input == 'X')
 
 
 enum calInfoOptions {
@@ -137,15 +137,16 @@ int getStringInput(char * STRING, char * IDENTIFIER, char * POS) {
 //
 // @param INTEGER - address where int input is stored
 // @param POS - cursor offset
-// @param COL - display misc
 //
 // @RETURN true if input is of numerical value
-int getIntInput(int * INTEGER, char * POS, char * COL) {
-    int isValid = 0;
+int getIntInput(int * INTEGER, char * POS) {
+    int isValid = 1;
 
     char ch = getchar();
-    while(ch == '\n') {
-        printf("\e[1F%s", POS); // moves cursor back to previous position using escape characters
+    while(ch == '\n' || ch == ' ') {
+        // moves cursor back to previous position using escape characters
+        if(ch == '\n') printf("\e[1F%s", POS);
+        if(ch == ' ') printf(POS); 
         ch = getchar();
     }
     ungetc(ch, stdin); // puts back the char to the input stream
@@ -155,8 +156,8 @@ int getIntInput(int * INTEGER, char * POS, char * COL) {
     if(!isValid) { // checks for valid int input
         clearBuffer();
 
-        printf("\e[1F\e[0J\e[20G\t\t%s[!] Please enter a numerical value%s", COL, POS);
-        isValid = getIntInput(INTEGER, POS, COL);
+        printf("\e[1F\e[0J\e[20G\t\t" RED "[!] Please enter a numerical value%s" RESET, POS);
+        isValid = getIntInput(INTEGER, POS);
     }
     printf("\e[1F\e[20G\t\t\e[0J\n"); // removes the [!] comment
 

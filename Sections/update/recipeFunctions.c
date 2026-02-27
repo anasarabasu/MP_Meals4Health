@@ -1,17 +1,10 @@
 void addRecipe(recipe RECIPES[], int *INDEX) {
     addRecDisplay();
 
-    char input = '\0';
-
-    int classIndex = 0;
-    string classification[3]= {
-        "Starter",
-        "Main",
-        "Dessert"
-    };
+    char input;
 
     int recipeIndex = *INDEX;
-    while(recipeIndex < 50 && INPUT_EXIT) {
+    while(recipeIndex < 50 && !INPUT_EXIT) {
         printf(PRP "    Dish Name: " GRY " (%d out of 50)\n    " RESET, recipeIndex + 1);
         getStringInput(RECIPES[recipeIndex].name, "%[^\n]20s", "\e[1F\e[5G");
 
@@ -36,7 +29,8 @@ void addRecipe(recipe RECIPES[], int *INDEX) {
         }
         while(!isUnique);
         printf("\e[1F\e[20G\t\t\e[0J\n"); // removes the [!] comment
-        
+        clearBuffer();
+
         //------------------------------------------
 
         printf(
@@ -45,14 +39,21 @@ void addRecipe(recipe RECIPES[], int *INDEX) {
             RESET
         );
 
-        while(input != '\n') {
+        int classIndex = 0;
+        string classification[3]= {
+            "Starter",
+            "Main",
+            "Dessert"
+        };
+        
+        while(!INPUT_ENTER) {
             classIndex = selectionLooper(classIndex, 2);
             
             int selectionDisplayIndex = 0;
             while(selectionDisplayIndex != 3) {
                 
-                if(classIndex == selectionDisplayIndex) printf(">>>" BLINK);
-                else printf(GRY ">>>");
+                if(classIndex == selectionDisplayIndex) printf(">");
+                else printf(GRY ">");
                 
                 printf(" %-20s" RESET, classification[selectionDisplayIndex]);
                 
@@ -72,7 +73,8 @@ void addRecipe(recipe RECIPES[], int *INDEX) {
         //------------------------------------------
 
         printf(PRP "\n\n    Number of Servings:\n    " RESET);
-        scanf("%d", &RECIPES[recipeIndex].servings);
+        getIntInput(&RECIPES[recipeIndex].servings, "\e[5G");
+        clearBuffer();
 
         //------------------------------------------
 
@@ -83,7 +85,6 @@ void addRecipe(recipe RECIPES[], int *INDEX) {
         );
 
         int ingredientIndex = 0;
-
         addIngredient(RECIPES[recipeIndex].ingredients, &ingredientIndex, 20, 1);
 
         if(ingredientIndex == 20) {
@@ -102,7 +103,6 @@ void addRecipe(recipe RECIPES[], int *INDEX) {
         );
 
         int stepIndex = 0;
-
         addStep(RECIPES[stepIndex].steps, &stepIndex, 15, 1);
 
         if(stepIndex == 15) {
@@ -117,17 +117,17 @@ void addRecipe(recipe RECIPES[], int *INDEX) {
         printf(
             "\n\n" LINE "\n"
             GRY
-            " * [ ANY KEY ] to continue adding dishes\n"
+            " * [ ENTER ] to continue adding dishes\n"
             " * [ X ] to return to update menu\n"
             RESET
         );
 
         input = getch();
-        while(input != '\n' && INPUT_EXIT) 
+        while(!INPUT_ENTER && !INPUT_EXIT) 
             input = getch();
         
-        if(INPUT_EXIT)
-            input = '\0'; // Resets the input, important to not skip the following classification prompt
+        if(INPUT_ENTER)
+            input = ' '; // Resets the input, important to not skip the following classification prompt
 
         recipeIndex++;
         *INDEX = recipeIndex;
@@ -176,9 +176,9 @@ void listRecipeTitles(recipe RECIPES[], int TOTAL) {
         
     printf(GRY " * [ X ] to return to update menu\n" RESET);
         
-    char input = '\0';
+    char input;
     input = getch();
-    while(INPUT_EXIT) 
+    while(!INPUT_EXIT) 
         input = getch();
 
 }

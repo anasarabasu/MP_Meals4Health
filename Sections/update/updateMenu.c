@@ -3,18 +3,19 @@
 // @RETURNS 0 if log-in details are valid RETURNS -1 if not, matching the mode indices
 int logIn() {
     printf(
-        "\n"
-        "ADMIN LOG IN SCREEN\n"
+        "\nADMIN LOG IN SCREEN\n"
         "\n"
     );
 
     char userName[7];
     printf(YLW "    Username: " RESET);
     getStringInput(userName, "%6[^\n]s", "\e[1F\e[15G");
+    clearBuffer();
 
     char pass[8];
     printf(YLW "    Password: " RESET);
     getStringInput(pass, "%7[^\n]s", "\e[1F\e[15G");
+    clearBuffer();
 
     int canProceed = 0;
     if(strcmp(userName, "admin") || strcmp(pass, "ad1234")) {
@@ -42,7 +43,7 @@ int logIn() {
 // 
 int updateMenu() {
     int option = 0;
-    char input = '\0';
+    char input;
     
     string options[13] = {
         /* 00 */ "Add Food-Calorie Info",
@@ -91,10 +92,8 @@ int updateMenu() {
     return option;
 }
 
-// //TURN TO LOCAL VARIABLES
-
 void updateFuncSwitch(int OPTION, ingredient FOOD[], int *F_ELEM, recipe RECIPES[], int *R_ELEM) {
-    WIPE
+    // system("cls");
 
     enum calInfoOptions option = OPTION;
     switch(option) {
@@ -116,32 +115,28 @@ void updateFuncSwitch(int OPTION, ingredient FOOD[], int *F_ELEM, recipe RECIPES
             break;
         case SAVE_CAL: break;
         case LOAD_CAL: break;
-        case ADD_REC: break;
+
+        case ADD_REC: 
+            addRecipe(RECIPES, R_ELEM);
+            break;
         case MOD_REC: break;
         case DEL_REC: break;
-        case LIST_REC: break;
+        case LIST_REC: 
+            // listRecipeTitlesDisplay();
+
+            if(!(*R_ELEM)) {
+                printf(
+                    RED " [!] List empty\n"
+                    GRY " >>> Returning back to update menu\n" RESET
+                );
+                delayedLoad();
+            }
+            else
+                listRecipeTitles(RECIPES, *R_ELEM);
+            break;
         case SCAN_REC: break;
         case SEARCH_REC: break;
         case EXPORT_REC: break;
         case IMPORT_REC: break;
-        // // RECIPES
-        // case 4:
-        //     addRecipe(RECIPES, &recElements);
-        //     break;
-        // case 7:
-        //     listRecipeTitlesDisplay();
-
-        //     if(!recElements) {
-        //         printf(
-        //             RED " [!] List empty\n"
-        //             GRY " >>> Returning back to update menu\n" RESET
-        //         );
-        //         delayedLoad();
-        //     }
-        //     else
-        //         listRecipeTitles(RECIPES, recElements);
-        //     break;
-
-        
     }
 }

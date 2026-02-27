@@ -1,17 +1,3 @@
-#define WIPE printf("\e[H\e[0J");
-
-#define RESET "\e[0m"
-#define BLINK "\e[5m"
-#define GRY "\e[1;30m"
-#define RED "\e[31m"
-#define GRN "\e[32m"
-#define YLW "\e[33m"
-#define PRP "\e[35m"
-
-#define LINE "======================================================================================================================\n"
-#define LINE2 " --------------------------------------------------------------------------------------------------------------------\n"
-#define LINE3 " ----------------------------------------------------------------------\n"
-
 // Handles the rotating menu options display
 //
 // @param SELECTED - index of currently selected option
