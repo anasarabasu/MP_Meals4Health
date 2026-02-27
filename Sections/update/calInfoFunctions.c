@@ -45,7 +45,7 @@ void viewCalInfo(ingredient FOOD[], int INDEX) {
         int displayIndex = 0;
         while(displayIndex < 10 && displayIndex != rows) {
             printf(
-                " |  %02d  |    %-19s    ||    %-18.2f    ||    %-14s    ||    %-18.2f    |\n"
+                " |  %02d  |    %-19s    ||    %-18.2d    ||    %-14s    ||    %-18.2d    |\n"
                 " |      |    %-19s    ||    %-18s    ||    %-14s    ||    %-18s    |\n"
                 LINE2, 
                 displayIndex + 1 + displayOffset,

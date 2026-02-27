@@ -1,19 +1,19 @@
 typedef char string[30];
 
 struct ingredientStruct {
-    char item[20];
-    float quantity;
+    char item[21];
+    int quantity;
     char unit[15];
-    float calories;
+    int calories;
 };
 typedef struct ingredientStruct ingredient;
 
 struct recipeStruct {
-    char name[20];
+    char name[21];
     char * classification;
 
     ingredient ingredients[20];
-    char steps[15][70];
+    char steps[15][71];
     int servings;
 };
 typedef struct recipeStruct recipe;
@@ -85,32 +85,80 @@ void clearBuffer() {
 
 // Handles all scanf events for strings
 // Ensures that the string input contains atleast 1 character that's not a whitespace
+// CLeans up trailing whitespaces
 // Also moves the cursor to last position to prevent the empty newline with enter keys
 //
 // @param STRING - address where string input is stored
 // @param IDENTIFIER - specified length of string termination + string scanset
-// @param POS
-void getStringInput(char * STRING, char * IDENTIFIER, char * POS) {
+// @param POS - cursor offset
+//
+// @RETURN true if input contains atleast a non-whitespace character
+int getStringInput(char * STRING, char * IDENTIFIER, char * POS) {
+    int isValid = 0;
+
+    strcpy(STRING, ""); // resets input
     scanf(IDENTIFIER, STRING);
 
-    int isValid = 0;
-    while(!isValid) {
-        int length = strlen(STRING);
-        if(length > 0) {
-            int index;
-            for(index = length; index != 0; index--) {
-                if(STRING[index] != ' ') isValid = 1;
-                else STRING[index] = '\0';
-            }
+    int length = strlen(STRING);
+    if(length > 0) {
+        // remove left-hand spaces
+        int index = 0;
+        while(STRING[index] == ' ') index++;
 
+        int offset = 0;
+        while(STRING[offset + index] != '\0') {
+            STRING[offset] = STRING[offset + index];
+            offset++;
         }
+        STRING[offset] = '\0';
 
-        if(!isValid) {
-            clearBuffer();
-
-            printf(POS); // moves cursor back to previous position using escape characters
-            scanf(IDENTIFIER, STRING);
-        }
+        // remove right-hand spaces
+        index = length - 1;
+        while(STRING[index] == ' ') index--;
+        STRING[index + 1] = '\0';
+        
+        // validate not empty
+        length = strlen(STRING);
+        if(length) isValid = 1;
     }
-    clearBuffer();
+
+    if(!isValid) {
+        clearBuffer();
+
+        printf(POS); // moves cursor back to previous position using escape characters
+        isValid = getStringInput(STRING, IDENTIFIER, POS);
+    }
+
+    return isValid;
+}
+
+// Handles all integer input
+// Validates input as integer
+//
+// @param INTEGER - address where int input is stored
+// @param POS - cursor offset
+// @param COL - display misc
+//
+// @RETURN true if input is of numerical value
+int getIntInput(int * INTEGER, char * POS, char * COL) {
+    int isValid = 0;
+
+    char ch = getchar();
+    while(ch == '\n') {
+        printf("\e[1F%s", POS); // moves cursor back to previous position using escape characters
+        ch = getchar();
+    }
+    ungetc(ch, stdin); // puts back the char to the input stream
+
+    *INTEGER = 0;
+    isValid = scanf("%d", INTEGER);
+    if(!isValid) { // checks for valid int input
+        clearBuffer();
+
+        printf("\e[1F\e[0J\e[20G\t\t%s[!] Please enter a numerical value%s", COL, POS);
+        isValid = getIntInput(INTEGER, POS, COL);
+    }
+    printf("\e[1F\e[20G\t\t\e[0J\n"); // removes the [!] comment
+
+    return isValid;
 }

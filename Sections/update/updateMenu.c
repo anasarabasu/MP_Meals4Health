@@ -94,7 +94,6 @@ int updateMenu() {
 // //TURN TO LOCAL VARIABLES
 
 void updateFuncSwitch(int OPTION, ingredient FOOD[], int *F_ELEM, recipe RECIPES[], int *R_ELEM) {
-    
     WIPE
 
     enum calInfoOptions option = OPTION;
