@@ -40,11 +40,11 @@ int logIn() {
     return canProceed;
 }
 
-// 
+
 int updateMenu() {
-    int option = 0;
     char input;
     
+    int option = 0;
     string options[13] = {
         /* 00 */ "Add Food-Calorie Info",
         /* 01 */ "View Food-Calorie Chart",
@@ -52,11 +52,11 @@ int updateMenu() {
         /* 03 */ GRY "Load Calorie Info\n",
 
         /* 04 */ "Add Recipe",
-        /* 05 */ GRY "Modify Recipe",
+        /* 05 */ "Modify Recipe",
         /* 06 */ GRY "Delete Recipe",
         /* 07 */ "List Recipe Titles",
-        /* 08 */ GRY "Scan Recipes",
-        /* 09 */ GRY "Search Recipe by Title",
+        /* 08 */ "Scan Recipes",
+        /* 09 */ "Search Recipe by Title",
         /* 10 */ GRY "Export Recipes",
         /* 11 */ GRY "Import Recipes\n",
         
@@ -66,7 +66,7 @@ int updateMenu() {
     while(!INPUT_ENTER) {
         printf(
             "\n"
-            "    UPDATE MODE\n"
+            "UPDATE MODE\n"
             "\n"
         );
         
@@ -76,7 +76,7 @@ int updateMenu() {
         
         printf(
             GRY 
-            "\n * [ ↑ / ↓ ] to navigate\n"
+            "\n * [ UP / DOWN ] to navigate\n"
             " * [ ENTER ] to select\n\n" 
             RESET
         );
@@ -93,7 +93,7 @@ int updateMenu() {
 }
 
 void updateFuncSwitch(int OPTION, ingredient FOOD[], int *F_ELEM, recipe RECIPES[], int *R_ELEM) {
-    // system("cls");
+    system("cls");
 
     enum calInfoOptions option = OPTION;
     switch(option) {
@@ -103,26 +103,43 @@ void updateFuncSwitch(int OPTION, ingredient FOOD[], int *F_ELEM, recipe RECIPES
             break;
         case VIEW_CAL: 
             if(!(*F_ELEM)) {
-                // addCalDisplay();
                 printf(
                     RED " [!] List empty\n"
                     GRY " >>> Returning back to update menu\n" RESET
                 );
                 delayedLoad();
             }
-            else
-                viewCalInfo(FOOD, *F_ELEM); 
+            else viewCalInfo(FOOD, *F_ELEM); 
             break;
         case SAVE_CAL: break;
         case LOAD_CAL: break;
-
         case ADD_REC: 
             addRecipe(RECIPES, R_ELEM);
             break;
-        case MOD_REC: break;
-        case DEL_REC: break;
+        case MOD_REC: 
+            if(!(*R_ELEM)) {
+                printf(
+                    RED " [!] List empty\n"
+                    GRY " >>> Returning back to update menu\n" RESET
+                );
+                delayedLoad();
+            }
+            else modRec(RECIPES, *R_ELEM);
+            break;
+        case DEL_REC: 
+            printf("\DELETE RECIPE\n\n");
+        
+            if(!(*R_ELEM)) {
+                printf(
+                    RED " [!] List empty\n"
+                    GRY " >>> Returning back to update menu\n" RESET
+                );
+                delayedLoad();
+            }
+            // else 
+            break;
         case LIST_REC: 
-            // listRecipeTitlesDisplay();
+            printf("\nLIST RECIPE TITLES\n\n");
 
             if(!(*R_ELEM)) {
                 printf(
@@ -131,11 +148,40 @@ void updateFuncSwitch(int OPTION, ingredient FOOD[], int *F_ELEM, recipe RECIPES
                 );
                 delayedLoad();
             }
-            else
+            else {
                 listRecipeTitles(RECIPES, *R_ELEM);
+
+                printf(GRY " * [ ENTER ] to return to update menu\n" RESET);
+        
+                char input;
+                input = getch();
+                while(!INPUT_ENTER) 
+                    input = getch();
+            }
             break;
-        case SCAN_REC: break;
-        case SEARCH_REC: break;
+        case SCAN_REC: 
+            if(!(*R_ELEM)) {
+                printf(
+                    RED " [!] List empty\n"
+                    GRY " >>> Returning back to update menu\n" RESET
+                );
+                delayedLoad();
+            }
+            else scanRec(RECIPES, *R_ELEM);
+
+            break;
+        case SEARCH_REC: 
+            printf("\nSEARCH RECIPE BY TITLE\n\n");
+
+            if(!(*R_ELEM)) {
+                printf(
+                    RED " [!] List empty\n"
+                    GRY " >>> Returning back to update menu\n" RESET
+                );
+                delayedLoad();
+            }
+            else searchRec(RECIPES, *R_ELEM);
+            break;
         case EXPORT_REC: break;
         case IMPORT_REC: break;
     }

@@ -38,7 +38,7 @@ students and/or persons, nor did I employ the use of AI in any part of the deliv
 #include "Sections/update/recipeFunctions.c"
 #include "Sections/update/updateMenu.c"
 
-
+// global var
 
 int main() {
     SetConsoleOutputCP(65001); // allows displaying of UNICODE characters
@@ -47,7 +47,7 @@ int main() {
     int fElem = 0;
 
     recipe recipes[50];
-    int rElem = 0;
+    int rElem = 4;
 
     int mode = -1;
     mode = 0;

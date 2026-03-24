@@ -20,7 +20,7 @@ int mainMenu() {
         
         mode = selectionLooper(mode, 2);
         selectionCarousel(mode, 3, options, YLW);
-        printf(GRY "\n * [ ↑ / ↓ ] to navigate\n * [ ENTER ] to select\n" RESET);
+        printf(GRY "\n * [ UP / DOWN ] to navigate\n * [ ENTER ] to select\n" RESET);
 
         input = getch();
         navigation(input, &mode, 'y');

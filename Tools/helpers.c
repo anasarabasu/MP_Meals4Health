@@ -3,7 +3,7 @@ typedef char string[30];
 struct ingredientStruct {
     char item[21];
     int quantity;
-    char unit[15];
+    char unit[16];
     int calories;
 };
 typedef struct ingredientStruct ingredient;
@@ -13,7 +13,11 @@ struct recipeStruct {
     char * classification;
 
     ingredient ingredients[20];
+    int ingredientCount;
+
     char steps[15][71];
+    int stepCount;
+
     int servings;
 };
 typedef struct recipeStruct recipe;
@@ -120,6 +124,7 @@ int getStringInput(char * STRING, char * IDENTIFIER, char * POS) {
         // validate not empty
         length = strlen(STRING);
         if(length) isValid = 1;
+
     }
 
     if(!isValid) {
@@ -152,11 +157,21 @@ int getIntInput(int * INTEGER, char * POS) {
     ungetc(ch, stdin); // puts back the char to the input stream
 
     *INTEGER = 0;
-    isValid = scanf("%d", INTEGER);
+    char *garbage;
+
+    isValid = (scanf("%d%[^\n]s", INTEGER, garbage));
+
+    int index = 0;
+    int max = strlen(garbage);
+    while(max && index < max) {
+        if(garbage[index] != ' ') isValid = 0;
+        index++;
+    }
+
     if(!isValid) { // checks for valid int input
         clearBuffer();
 
-        printf("\e[1F\e[0J\e[20G\t\t" RED "[!] Please enter a numerical value%s" RESET, POS);
+        printf("\e[1F\e[0J\e[20G\t\t" RED "[!] Please enter only numerical values%s" RESET, POS);
         isValid = getIntInput(INTEGER, POS);
     }
     printf("\e[1F\e[20G\t\t\e[0J\n"); // removes the [!] comment

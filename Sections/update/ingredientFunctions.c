@@ -11,7 +11,6 @@ void addIngredient(ingredient INGREDIENT[], int *INDEX, int MAX, int INDENT) {
         );
 
         if(INDENT) getStringInput(INGREDIENT[ingredientIndex].item, "%20[^\n]s", "\e[1F\e[9G");
-            // if(!ingredientIndex) printf("\n");
         
         else getStringInput(INGREDIENT[ingredientIndex].item, "%20[^\n]s", "\e[1F\e[5G");
         
@@ -32,17 +31,20 @@ void addIngredient(ingredient INGREDIENT[], int *INDEX, int MAX, int INDENT) {
         
             if(!isUnique) {
                 if (INDENT) {
-                    printf(RED "\e[1F\e[0J\e[20G\t\t%s[!] This item already exists, please enter a new one\e[9G" RESET, indent);
+                    printf(RED "\e[1F\e[0J\e[29G\t\t%s[!] This item already exists, please enter a new one\e[9G" RESET, indent);
                     getStringInput(INGREDIENT[ingredientIndex].item, "%20[^\n]s", "\e[9G");
                 } 
                 else {
-                    printf(RED "\e[1F\e[0J\e[20G\t\t%s[!] This item already exists, please enter a new one\e[5G" RESET, indent);
+                    printf(RED "\e[1F\e[0J\e[25G\t\t%s[!] This item already exists, please enter a new one\e[5G" RESET, indent);
                     getStringInput(INGREDIENT[ingredientIndex].item, "%20[^\n]s", "\e[5G");
                 }
             }
         }
         while(!isUnique);
-        printf("\e[1F\e[20G\t\t\e[0J\n"); // removes the [!] comment
+        if(INDENT)
+            printf("\e[1F\e[29G\t\t\e[0J\n"); // removes the [!] comment
+        else
+            printf("\e[1F\e[25G\t\t\e[0J\n"); // removes the [!] comment
         clearBuffer();
 
 
@@ -97,6 +99,36 @@ void addIngredient(ingredient INGREDIENT[], int *INDEX, int MAX, int INDENT) {
     }
 }
 
+void deleteIngredient(ingredient INGREDIENTS[], int *TOTAL) {
+    int index = 0;
+    while(index < *TOTAL) {
+        printf(
+            PRP "    %2d) "
+            RESET "%s\n",
+            index+1,
+            INGREDIENTS[index]
+        );
+        index++;
+    }
+    
+    int input = 0;
+    printf(
+        "\n"
+        LINE2
+        "\n    Enter the corresponding number of the ingredient to delete:\n    "
+    );
+    getIntInput(&input, "\e[5G" RESET);
+
+    if(input > *TOTAL || !input) {
+        clearBuffer();
+        printf("\e[1F\e[0J\e[20\t\t" RED "[!] Please enter a valid number\e[5G" RESET);
+        input = getIntInput(&input, "\e[5G" RESET);
+    }
+    
+    // clearBuffer();
+
+}
+
 void addStep(char STEPS[15][71], int *INDEX, int MAX, int INDENT) {
     char indent[5] = "";
     if(INDENT) strcpy(indent, "    ");
@@ -105,11 +137,10 @@ void addStep(char STEPS[15][71], int *INDEX, int MAX, int INDENT) {
 
     int stepIndex = *INDEX;
     while(stepIndex < MAX && !INPUT_EXIT) {
-        printf(YLW "\n%s    Step #%d: " GRY "(out of %d)" "\n%s    " RESET, indent, stepIndex + 1, MAX + 1, indent);
+        printf(YLW "\n%s    Step #%d: " GRY "(out of %d)" "\n%s    " RESET, indent, stepIndex + 1, MAX, indent);
 
-        if(INDENT) {
-            getStringInput(STEPS[stepIndex], "%[^\n]70s", "\e[1F\e[9G");
-        }
+        if(INDENT) getStringInput(STEPS[stepIndex], "%70[^\n]s", "\e[1F\e[9G");
+        else getStringInput(STEPS[stepIndex], "%70[^\n]s", "\e[1F\e[5G");
 
         //------------------------------------------
 
@@ -128,6 +159,9 @@ void addStep(char STEPS[15][71], int *INDEX, int MAX, int INDENT) {
         stepIndex++;
         *INDEX =  stepIndex;
         
-        printf("\e[3F\e[0J");
+        printf("\e[3F\e[0J\n");
+        clearBuffer();
     }
 }
+
+//void deleteStep() {}
