@@ -45,10 +45,9 @@ int main() {
 
     ingredient food[50];
     int fElem = 0;
-
     recipe recipes[50];
-    strcpy(recipes[0].name, "food");
-    int rElem = 4;
+    int rElem = 0;
+    // strcpy(recipes[0].name, "food");
 
     int mode = -1;
     mode = 0;
@@ -56,12 +55,16 @@ int main() {
         switch(mode) { 
             case -1: 
                 mode = mainMenu();
+
+                // reset
+                fElem = 0;
+                rElem = 0;
                 break;
             case 0: {
                 // mode = logIn();
 
                 int option;
-                if(mode == 0) option = updateMenu();
+                if(mode == 0) option = updateMenu(fElem, rElem);
                 if(option == -1) mode = -1;
 
                 updateFuncSwitch(option, food, &fElem, recipes, &rElem);

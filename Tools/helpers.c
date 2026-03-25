@@ -1,4 +1,5 @@
 typedef char string[90];
+typedef char filename[21];
 
 struct ingredientStruct {
     char item[21];

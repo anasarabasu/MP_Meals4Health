@@ -1,4 +1,4 @@
-void addIngredient(ingredient INGREDIENT[], int *INDEX, int MAX, int INDENT) {
+void addIngredients(ingredient INGREDIENT[], int *INDEX, int MAX, int INDENT) {
     char indent[5] = "";
     if(INDENT) strcpy(indent, "    ");
 
@@ -99,69 +99,54 @@ void addIngredient(ingredient INGREDIENT[], int *INDEX, int MAX, int INDENT) {
     }
 }
 
-void deleteIngredient(ingredient INGREDIENTS[], int *TOTAL) {
-    int index = 0;
-    while(index < *TOTAL) {
-        printf(
-            PRP "    %2d) "
-            RESET " %s\n",
-            index+1,
-            INGREDIENTS[index].item
-        );
-        index++;
-    }
-    
+void deleteIngredients(ingredient INGREDIENTS[], int *TOTAL) {
     int input = 0;
-    printf(
-        "\n"
-        LINE2
-        "\n    Enter the corresponding number of the ingredient to delete:\n    "
-    );
-    getIntInput(&input, "\e[5G" RESET);
+    do {
+        printf("\nDELETE INGREDIENTS\n\n");
 
-    if(input > *TOTAL || input == 0) {
-        clearBuffer();
-        printf("\e[1F\e[0J\e[20\t\t" RED "[!] Please enter a valid number\e[5G" RESET);
-        input = getIntInput(&input, "\e[5G" RESET);
-    }
-    printf("\e[1F\e[20G\t\t\e[0J\n"); // removes the [!] comment
-    
-    // clearBuffer();
-}
-
-void addStep(char STEPS[15][71], int *INDEX, int MAX, int INDENT) {
-    char indent[5] = "";
-    if(INDENT) strcpy(indent, "    ");
-
-    char input;
-
-    int stepIndex = *INDEX;
-    while(stepIndex < MAX && !INPUT_EXIT) {
-        printf(YLW "\n%s    Step #%d: " GRY "(out of %d)" "\n%s    " RESET, indent, stepIndex + 1, MAX, indent);
-
-        if(INDENT) getStringInput(STEPS[stepIndex], "%70[^\n]s", "\e[1F\e[9G");
-        else getStringInput(STEPS[stepIndex], "%70[^\n]s", "\e[1F\e[5G");
-
-        //------------------------------------------
+        int index = 0;
+        while(index < *TOTAL) {
+            printf(
+                PRP "    %2d) "
+                RESET " %s\n",
+                index+1,
+                INGREDIENTS[index].item
+            );
+            index++;
+        }
 
         printf(
-            GRY "\n"
-            "%s * [ ENTER ] to continue adding steps\n"
-            "%s * [ X ] to finish\n"
-            RESET,
-            indent, indent
+            "\n"
+            LINE2
+            "\n    Enter the corresponding number of the ingredient to delete:"
+            GRY "  Type 0 to exit" RESET
+            "\n    "
         );
 
-        input = getch();
-        while(!INPUT_ENTER && !INPUT_EXIT) 
-            input = getch();
+        getIntInput(&input, "\e[5G" RESET);
 
-        stepIndex++;
-        *INDEX =  stepIndex;
-        
-        printf("\e[3F\e[0J\n");
+        while(input > *TOTAL) {
+            clearBuffer();
+            printf("\e[1F\e[0J\e[20G\t\t" RED "[!] Please enter a valid number\e[5G" RESET);
+            getIntInput(&input, "\e[5G" RESET);
+        }
+
+        printf("\e[1F\e[20G\t\t\e[0J\n"); // removes the [!] comment
         clearBuffer();
-    }
-}
 
-//void deleteStep() {}
+        if(input > 0 && input <= *TOTAL) {
+            int shiftIndex = input;
+
+            while(shiftIndex < *TOTAL) {
+                INGREDIENTS[shiftIndex - 1] = INGREDIENTS[shiftIndex];
+                shiftIndex++;
+            }
+
+            (*TOTAL)--;
+        }
+
+        WIPE
+
+    }
+    while(*TOTAL > 1 && input != 0);
+}

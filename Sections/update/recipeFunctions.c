@@ -1,3 +1,89 @@
+
+void addSteps(char STEPS[15][71], int *INDEX, int MAX, int INDENT) {
+    char indent[5] = "";
+    if(INDENT) strcpy(indent, "    ");
+
+    char input;
+
+    int stepIndex = *INDEX;
+    while(stepIndex < MAX && !INPUT_EXIT) {
+        printf(YLW "\n%s    Step #%d: " GRY "(out of %d)" "\n%s    " RESET, indent, stepIndex + 1, MAX, indent);
+
+        if(INDENT) getStringInput(STEPS[stepIndex], "%70[^\n]s", "\e[1F\e[9G");
+        else getStringInput(STEPS[stepIndex], "%70[^\n]s", "\e[1F\e[5G");
+
+        //------------------------------------------
+
+        printf(
+            GRY "\n"
+            "%s * [ ENTER ] to continue adding steps\n"
+            "%s * [ X ] to finish\n"
+            RESET,
+            indent, indent
+        );
+
+        input = getch();
+        while(!INPUT_ENTER && !INPUT_EXIT) 
+            input = getch();
+
+        stepIndex++;
+        *INDEX =  stepIndex;
+        
+        printf("\e[3F\e[0J\n");
+        clearBuffer();
+    }
+}
+
+void deleteSteps(char STEPS[15][71], int *TOTAL) {
+    int input = 0;
+    do {
+        printf("\nDELETE STEPS\n\n");
+
+        int index = 0;
+        while(index < *TOTAL) {
+            printf(
+                PRP "    %2d) "
+                RESET " %s\n",
+                index+1,
+                STEPS[index]
+            );
+            index++;
+        }
+
+        printf(
+            "\n"
+            LINE2
+            "\n    Enter the corresponding number of the step to delete:"
+            GRY "  Type 0 to exit" RESET
+            "\n    "
+        );
+
+        getIntInput(&input, "\e[5G" RESET);
+        while(input > *TOTAL) {
+            clearBuffer();
+            printf("\e[1F\e[0J\e[20G\t\t" RED "[!] Please enter a valid number\e[5G" RESET);
+            getIntInput(&input, "\e[5G" RESET);
+        }
+
+        printf("\e[1F\e[20G\t\t\e[0J\n"); // removes the [!] comment
+        clearBuffer();
+
+        if(input > 0 && input <= *TOTAL) {
+            int shiftIndex = input;
+
+            while(shiftIndex < *TOTAL) {
+                strcpy(STEPS[shiftIndex - 1], STEPS[shiftIndex]);
+                shiftIndex++;
+            }
+
+            (*TOTAL)--;
+        }
+
+        WIPE
+    }
+    while(*TOTAL > 1 && input != 0);
+}
+
 void addRecipe(recipe RECIPES[], int *INDEX) {
     printf("\nADD RECIPE\n" RESET);
 
@@ -94,7 +180,7 @@ void addRecipe(recipe RECIPES[], int *INDEX) {
         );
 
         int ingredientIndex = 0;
-        addIngredient(RECIPES[recipeIndex].ingredients, &ingredientIndex, 20, 1);
+        addIngredients(RECIPES[recipeIndex].ingredients, &ingredientIndex, 20, 1);
         RECIPES[recipeIndex].ingredientCount = ingredientIndex;
 
         if(ingredientIndex == 20) {
@@ -113,7 +199,7 @@ void addRecipe(recipe RECIPES[], int *INDEX) {
         );
 
         int stepIndex = 0;
-        addStep(RECIPES[recipeIndex].steps, &stepIndex, 15, 1);
+        addSteps(RECIPES[recipeIndex].steps, &stepIndex, 15, 1);
         RECIPES[recipeIndex].stepCount = stepIndex;
 
         if(stepIndex == 15) {
@@ -158,7 +244,8 @@ void addRecipe(recipe RECIPES[], int *INDEX) {
 }
 
 void listRecipeTitles(recipe RECIPES[], int TOTAL) {
-    char temp[20];
+    recipe temp;
+    // char temp[20];
     int min = 0;
     
     int sortIndex = 0;
@@ -170,9 +257,9 @@ void listRecipeTitles(recipe RECIPES[], int TOTAL) {
             recipeIndex++;
         }
         
-        strcpy(temp, RECIPES[sortIndex].name);
-        strcpy(RECIPES[sortIndex].name, RECIPES[min].name);
-        strcpy(RECIPES[min].name, temp);
+        temp = RECIPES[sortIndex];
+        RECIPES[sortIndex] = RECIPES[min];
+        RECIPES[min] =  temp;
         
         sortIndex++;
         min = sortIndex;
@@ -267,6 +354,7 @@ void scanRec(recipe RECIPES[], int TOTAL) {
     
 }
 
+// returns the index of the matching recipe
 int checkRecipe(recipe RECIPES[], int TOTAL) {
     listRecipeTitles(RECIPES, TOTAL);
 
@@ -283,15 +371,18 @@ int checkRecipe(recipe RECIPES[], int TOTAL) {
         }
         
         if(!recipeExists) {
+            index = 0;
+
             printf(RED "\e[1F\e[0J\e[25G\t\t[!] This recipe does not exist\e[5G" RESET);
-            getStringInput(search, "%20[^\n]s", "\e[5G");
-            clearBuffer();  
+            printf("\n");
+            getStringInput(search, "%20[^\n]s", "\e[1F\e[5G");
         }
     }
     while(!recipeExists);
 
-    return index-1;
+    printf("\e[1F\e[25G\t\t\e[0J\n"); // removes the [!] comment
 
+    return index-1;
 }
 
 void searchRec(recipe RECIPES[], int TOTAL) {
@@ -370,23 +461,20 @@ void modRec(recipe RECIPES[], int TOTAL) {
         switch(option) {
             case 0: 
                 printf("\nADD INGREDIENTS\n\n");
-                addIngredient(RECIPES[recipeIndex].ingredients, &RECIPES[recipeIndex].ingredientCount, 20, 0);
+                addIngredients(RECIPES[recipeIndex].ingredients, &RECIPES[recipeIndex].ingredientCount, 20, 0);
                 break;
             case 1:
-                if(RECIPES[recipeIndex].ingredientCount > 1) {
-                    printf("\nDELETE INGREDIENTS\n\n");
-                    deleteIngredient(RECIPES[recipeIndex].ingredients, &RECIPES[recipeIndex].ingredientCount);
-                }
+                if(RECIPES[recipeIndex].ingredientCount > 1) 
+                    deleteIngredients(RECIPES[recipeIndex].ingredients, &RECIPES[recipeIndex].ingredientCount);
+                
                 break;
             case 2:
                 printf("\nADD STEPS\n\n");
-                addStep(RECIPES[recipeIndex].steps, &RECIPES[recipeIndex].stepCount, 15, 0);
+                addSteps(RECIPES[recipeIndex].steps, &RECIPES[recipeIndex].stepCount, 15, 0);
                 break;
             case 3:
-                if(RECIPES[recipeIndex].stepCount > 1) {
-
-                    printf("\nDELETE STEPS\n\n");
-                }
+                if(RECIPES[recipeIndex].stepCount > 1) 
+                    deleteSteps(RECIPES[recipeIndex].steps, &RECIPES[recipeIndex].stepCount);
                 
                 break;
             break;
@@ -397,6 +485,37 @@ void modRec(recipe RECIPES[], int TOTAL) {
     }
 }
 
-// void deleteRec() {}
+void deleteRec(recipe RECIPES[], int *INDEX) {
+    char input;
 
+    while (!INPUT_EXIT && *INDEX != 0) {
+        printf("\nDELETE RECIPES\n\n");
+
+        int index = checkRecipe(RECIPES, *INDEX);
+        clearBuffer();
+
+        int shiftIndex = input;
+        while(shiftIndex < *INDEX) {
+            RECIPES[shiftIndex] = RECIPES[shiftIndex + 1];
+            shiftIndex++;
+        }
+
+        (*INDEX)--;
+        
+        printf(
+            GRY "\n"
+            " * Recipe #%02d successfully deleted\n\n"
+            " * [ ENTER ] to continue deleting recipes\n"
+            " * [ X ] to finish\n"
+            RESET,
+            index+1
+        );
+
+        input = getch();
+        while(!INPUT_ENTER && !INPUT_EXIT) 
+            input = getch();
+
+        WIPE
+    }
+}
 // void exportRec() {}

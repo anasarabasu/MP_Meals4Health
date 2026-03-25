@@ -3,7 +3,7 @@ void addCalInfo(ingredient FOOD[], int *INDEX) {
 
     if(*INDEX < 50) {
         printf(GRY " * Enter food item, quantity, unit, and calorie count\n\n" RESET);
-        addIngredient(FOOD, INDEX, 50, 0);
+        addIngredients(FOOD, INDEX, 50, 0);
     }
     if(*INDEX == 50) {
         printf(
@@ -75,6 +75,18 @@ void viewCalInfo(ingredient FOOD[], int INDEX) {
     printf("\n");
 }
 
-void saveCal() {}
+void saveCal(ingredient FOOD[]) {
+    printf("\nSAVE CALORIE INFO\n\n");
+
+    filename fileName;
+    printf(YLW"    File Name: \n    " RESET);
+    getStringInput(fileName, "%17[^\n]s", "\e[1F\e[5G");
+
+    printf(GRY "\n * File saved successfully!\n");
+    delayedLoad();
+
+}
+
+
 void loadCal() {}
 
