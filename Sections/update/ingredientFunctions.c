@@ -104,9 +104,9 @@ void deleteIngredient(ingredient INGREDIENTS[], int *TOTAL) {
     while(index < *TOTAL) {
         printf(
             PRP "    %2d) "
-            RESET "%s\n",
+            RESET " %s\n",
             index+1,
-            INGREDIENTS[index]
+            INGREDIENTS[index].item
         );
         index++;
     }
@@ -119,14 +119,14 @@ void deleteIngredient(ingredient INGREDIENTS[], int *TOTAL) {
     );
     getIntInput(&input, "\e[5G" RESET);
 
-    if(input > *TOTAL || !input) {
+    if(input > *TOTAL || input == 0) {
         clearBuffer();
         printf("\e[1F\e[0J\e[20\t\t" RED "[!] Please enter a valid number\e[5G" RESET);
         input = getIntInput(&input, "\e[5G" RESET);
     }
+    printf("\e[1F\e[20G\t\t\e[0J\n"); // removes the [!] comment
     
     // clearBuffer();
-
 }
 
 void addStep(char STEPS[15][71], int *INDEX, int MAX, int INDENT) {

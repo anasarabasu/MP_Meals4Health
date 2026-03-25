@@ -1,4 +1,4 @@
-typedef char string[30];
+typedef char string[90];
 
 struct ingredientStruct {
     char item[21];
@@ -157,16 +157,9 @@ int getIntInput(int * INTEGER, char * POS) {
     ungetc(ch, stdin); // puts back the char to the input stream
 
     *INTEGER = 0;
-    char *garbage;
+    char garbage[1] = {'\0'};
 
-    isValid = (scanf("%d%[^\n]s", INTEGER, garbage));
-
-    int index = 0;
-    int max = strlen(garbage);
-    while(max && index < max) {
-        if(garbage[index] != ' ') isValid = 0;
-        index++;
-    }
+    isValid = scanf("%d%1[^\n]s", INTEGER, garbage) && (garbage[0] == '\0' || garbage[0] == '\r');
 
     if(!isValid) { // checks for valid int input
         clearBuffer();

@@ -47,6 +47,7 @@ int main() {
     int fElem = 0;
 
     recipe recipes[50];
+    strcpy(recipes[0].name, "food");
     int rElem = 4;
 
     int mode = -1;

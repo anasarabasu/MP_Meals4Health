@@ -310,7 +310,7 @@ void searchRec(recipe RECIPES[], int TOTAL) {
     clearBuffer();  
 }
 
-int modRecMenu(recipe RECIPES) {
+int modRecMenu(recipe RECIPE) {
     char input;
     
     int option = 0;
@@ -321,11 +321,14 @@ int modRecMenu(recipe RECIPES) {
         "Delete Step\n",
         "Return to Update Menu"
     };
+
+    if(RECIPE.ingredientCount == 1) strcpy(options[1], GRY "Delete Ingredient    " RESET RED "[!] User is not allowed to delete all ingredients\n");
+    if(RECIPE.stepCount == 1) strcpy(options[3], GRY "Delete Step    " RESET RED "[!] User is not allowed to delete all ingredients\n");
     
     while(!INPUT_ENTER) {
         printf("\nMODIFY RECIPE\n");
         
-        displayRecipe(RECIPES);
+        displayRecipe(RECIPE);
         printf(LINE "\n");
         
         option = selectionLooper(option, 4);
@@ -362,43 +365,34 @@ void modRec(recipe RECIPES[], int TOTAL) {
     // int singl
 
     while(option != 4) {
+        WIPE
         
         switch(option) {
             case 0: 
-                WIPE
                 printf("\nADD INGREDIENTS\n\n");
-                
                 addIngredient(RECIPES[recipeIndex].ingredients, &RECIPES[recipeIndex].ingredientCount, 20, 0);
-                
                 break;
             case 1:
-                if(RECIPES[recipeIndex].ingredientCount == 1) {
-                    // options
-                    printf("User is not allowed to delete all ingredients");
+                if(RECIPES[recipeIndex].ingredientCount > 1) {
+                    printf("\nDELETE INGREDIENTS\n\n");
+                    deleteIngredient(RECIPES[recipeIndex].ingredients, &RECIPES[recipeIndex].ingredientCount);
                 }
-                // else {
-                //     WIPE
-
-                //     printf("\DELETE INGREDIENTS\n\n");
-
-                //     deleteIngredient(RECIPES[recipeIndex].ingredients, &RECIPES[recipeIndex].ingredientCount);
-                // }
-
                 break;
             case 2:
-                WIPE
                 printf("\nADD STEPS\n\n");
-                
                 addStep(RECIPES[recipeIndex].steps, &RECIPES[recipeIndex].stepCount, 15, 0);
-
                 break;
             case 3:
-                printf("\DELETE STEPS\n\n");
+                if(RECIPES[recipeIndex].stepCount > 1) {
+
+                    printf("\nDELETE STEPS\n\n");
+                }
                 
                 break;
             break;
         }
         
+        WIPE
         option = modRecMenu(RECIPES[recipeIndex]);
     }
 }

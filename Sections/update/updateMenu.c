@@ -127,7 +127,7 @@ void updateFuncSwitch(int OPTION, ingredient FOOD[], int *F_ELEM, recipe RECIPES
             else modRec(RECIPES, *R_ELEM);
             break;
         case DEL_REC: 
-            printf("\DELETE RECIPE\n\n");
+            printf("\nDELETE RECIPE\n\n");
         
             if(!(*R_ELEM)) {
                 printf(
