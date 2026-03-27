@@ -8,13 +8,16 @@ students and/or persons, nor did I employ the use of AI in any part of the deliv
                 Ashana Rivera Monsanto, DLSU ID# 12505951
 *********************************************************************************************************/
 
-#include <stdio.h>
-#include <string.h>
 #include <conio.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <windows.h>
 
-// #define WIPE system("cls");
-#define WIPE printf("\e[H\e[0J");
+
+#define TOP printf("\e[H");
+#define CURSOR_POS printf("\e[999;0H");
+#define CLEAN printf("\e[0J");
 
 #define RESET "\e[0m"
 #define BLINK "\e[5m"
@@ -24,65 +27,266 @@ students and/or persons, nor did I employ the use of AI in any part of the deliv
 #define YLW "\e[33m"
 #define PRP "\e[35m"
 
-#define LINE "======================================================================================================================\n"
-#define LINE2 " --------------------------------------------------------------------------------------------------------------------\n"
-#define LINE3 " ----------------------------------------------------------------------\n"
+#define LINE "==========================================================================================================================\n"
+#define LINE2 " ------------------------------------------------------------------------------------------------------------------------\n"
+#define LINE3 " --------------------------------------------------------------------------\n"
 
-#include "Tools/helpers.c"
-#include "Tools/display.c"
+// HELPERS -----------------------------------------------------------------------------------------
 
-#include "Sections/mainMenu.c"
+typedef char string[90];
+typedef char filename[21];
 
-#include "Sections/update/ingredientFunctions.c"
-#include "Sections/update/calInfoFunctions.c"
-#include "Sections/update/recipeFunctions.c"
-#include "Sections/update/updateMenu.c"
+struct ingredientStruct {
+    char item[21];
+    int quantity;
+    char unit[16];
+    int calories;
+};
+typedef struct ingredientStruct ingredient;
 
-// global var
+struct recipeStruct {
+    char name[21];
+    char classification[8];
 
-int main() {
-    SetConsoleOutputCP(65001); // allows displaying of UNICODE characters
+    ingredient ingredients[20];
+    int ingredientCount;
 
-    ingredient food[50];
-    int fElem = 0;
-    recipe recipes[50];
-    int rElem = 0;
-    // strcpy(recipes[0].name, "food");
+    char steps[15][71];
+    int stepCount;
 
-    int mode = -1;
-    mode = 0;
-    while(mode != -2) { // program loop
-        switch(mode) { 
-            case -1: 
-                mode = mainMenu();
+    int servings;
+};
+typedef struct recipeStruct recipe;
 
-                // reset
-                fElem = 0;
-                rElem = 0;
-                break;
-            case 0: {
-                // mode = logIn();
+#define sleep(seconds) Sleep((seconds)*1000)
 
-                int option;
-                if(mode == 0) option = updateMenu(fElem, rElem);
-                if(option == -1) mode = -1;
+#define INPUT_ENTER (input == '\r')
+#define INPUT_EXIT (input == 'x' || input == 'X')
 
-                updateFuncSwitch(option, food, &fElem, recipes, &rElem);
-                break;
-            }
-            
-            case 1:
-                printf("Access recipe unimplemented\n");
-                mode = 0;
-                break;
-            default: 
-                printf(" >>> Program stuck in a loop");
-                getch();
+
+// Resets the selection when it exceeds the range
+//
+// @param SELCTED - the current option index selected
+// @param MAX - the total number of options
+//
+// @RETURN the in-range selection index
+int selectionLooper(int SELECTED, int MAX) {
+    int selected = SELECTED;
+    if(SELECTED < 0) selected = MAX;
+    if(SELECTED > MAX) selected = 0;
+
+    return selected;
+}
+
+// Increments the selected index according only to the arrow key input type
+//
+// @param INPUT - the character returned from the input call
+// @param *SELECTED - pointer to the selected index
+// @param DIRECTION - determines if navigation goes vertically or horizontally
+void navigation(char INPUT, int *SELECTED, char DIRECTION) {
+    switch(INPUT) {
+        case 72: // up
+            if(DIRECTION == 'y') (*SELECTED)--;
             break;
+        case 80: // down
+            if(DIRECTION == 'y') (*SELECTED)++;
+            break;
+        case 77: // right
+            if(DIRECTION == 'x') (*SELECTED)++;
+            break;
+        case 75: // left
+            if(DIRECTION == 'x') (*SELECTED)--;
+            break;
+    }
+}
+
+// Consumes excess characters to avoid overflow error or input buffer leaking to the next scanf
+void clearBuffer() {
+    scanf("%*[^\n]"); 
+    getchar();
+}
+
+// Handles all scanf events for strings
+// Ensures that the string input contains atleast 1 character that's not a whitespace
+// TOPs up trailing whitespaces
+// Also moves the cursor to last position to prevent the empty newline with enter keys
+//
+// @param STRING - address where string input is stored
+// @param IDENTIFIER - specified length of string termination + string scanset
+// @param POS - cursor offset
+//
+// @RETURN true if input contains atleast a non-whitespace character
+int getStringInput(char * STRING, char * IDENTIFIER, char * POS) {
+    int isValid = 0;
+
+    strcpy(STRING, ""); // resets input
+    scanf(IDENTIFIER, STRING);
+
+    int length = strlen(STRING);
+    if(length > 0) {
+        // remove left-hand spaces
+        int index = 0;
+        while(STRING[index] == ' ') index++;
+
+        int offset = 0;
+        while(STRING[offset + index] != '\0') {
+            STRING[offset] = STRING[offset + index];
+            offset++;
+        }
+        STRING[offset] = '\0';
+
+        // remove right-hand spaces
+        index = length - 1;
+        while(STRING[index] == ' ') index--;
+        STRING[index + 1] = '\0';
+        
+        // validate not empty
+        length = strlen(STRING);
+        if(length) isValid = 1;
+
+    }
+
+    if(!isValid) {
+        clearBuffer();
+
+        printf(POS); // moves cursor back to previous position using escape characters
+        isValid = getStringInput(STRING, IDENTIFIER, POS);
+    }
+
+    return isValid;
+}
+
+// Handles all integer input
+// Validates input as integer
+//
+// @param INTEGER - address where int input is stored
+// @param POS - cursor offset
+//
+// @RETURN true if input is of numerical value
+int getIntInput(int * INTEGER, char * POS) {
+    int isValid = 1;
+
+    char ch = getchar();
+    while(ch == '\n' || ch == ' ') {
+        // moves cursor back to previous position using escape characters
+        if(ch == '\n') printf("\e[1F%s", POS);
+        if(ch == ' ') printf(POS); 
+        ch = getchar();
+    }
+    ungetc(ch, stdin); // puts back the char to the input stream
+
+    *INTEGER = 0;
+    char garbage[1] = {'\0'};
+
+    isValid = scanf("%d%1[^\n]s", INTEGER, garbage) && (garbage[0] == '\0' || garbage[0] == '\r');
+
+    if(!isValid) { // checks for valid int input
+        clearBuffer();
+
+        printf("\e[1F\e[0J\e[20G\t\t" RED "[!] Please enter only numerical values%s" RESET, POS);
+        isValid = getIntInput(INTEGER, POS);
+    }
+    printf("\e[1F\e[20G\t\t\e[0J\n"); // removes the [!] comment
+
+    return isValid;
+}
+
+int checkFileExists(filename FILENAME, int SAVE) { // 0 load // 1 save
+    printf(YLW"    File Name: \n    " RESET);
+    getStringInput(FILENAME, "%17[^\n]s", "\e[1F\e[5G");
+    strcat(FILENAME, ".txt");
+    clearBuffer();
+
+    int proceed = 1;
+    char input;
+
+    FILE *file;
+    if(file = fopen(FILENAME, "r")) { // checks if file exists
+        printf("\n    File exists, continue?" GRY "  [ Y / N ]\n" RESET);
+        
+        input = getch();
+        input = toupper(input);
+        while(input != 'N' && input != 'Y') {
+            input = getch();
+            input = toupper(input);
         }
 
-        system("cls");
+        if(input == 'N') {
+            printf(GRY "    * Action cancelled\n\n" RESET);
+            proceed = 0;
+        }
+
+        fclose(file);
     }
+    else {
+        if(!SAVE) {
+            printf(
+                RED "\n    File doesn't exist, exit?" GRY "  [ Y / N ]\n" RESET
+            );
+            
+            input = getch();
+            input = toupper(input);
+            while(input != 'N' && input != 'Y') {
+                input = getch();
+                input = toupper(input);
+            }
+            
+            if(input == 'Y') {
+                printf(GRY "    * Action cancelled\n\n" RESET);
+                proceed = 0;
+            }
+            else {
+                printf("\e[1F\e[0J");
+                proceed = checkFileExists(FILENAME, SAVE);
+            }
+        }
+    }
+
+
+    return proceed; // 0 doesnt exist // 1 exist then proceed  // -1 exists but cancel
+}
+
+// DISPLAY -----------------------------------------------------------------------------------------
+
+
+// Handles the rotating menu options display
+//
+// @param SELECTED - index of currently selected option
+// @param MAX - total total number of options to choose from
+// @param OPTIONS - string array of options to be displayed
+void selectionCarousel(int SELECTED, int MAX, string OPTIONS[], char * COLOUR) {
+    int selectionDisplayIndex;
+
+    for(selectionDisplayIndex = 0; selectionDisplayIndex != MAX; selectionDisplayIndex++) {
+        if(SELECTED == selectionDisplayIndex) {
+            if(SELECTED == MAX - 1) printf(RED " >>> " BLINK);
+            else printf("%s >>> " BLINK, COLOUR);
+        }
+        else printf("    ");
+
+        printf("%s\n" RESET, OPTIONS[selectionDisplayIndex]);
+    }
+}
+
+// Dot dot dot
+void delayedLoad() {
+    int index;
+    for(index = 0; index != 3; index++) {
+        sleep(1);
+        printf(GRY " .\n" RESET);
+    }
+
+    TOP
+}
+
+#include "recipes.c"
+#include "cal.c"
+#include "menus.c"
+
+int main() {
+    system("cls");
+    
+    menuSwitch();
 
     printf(" >>> Program terminated\n");
 

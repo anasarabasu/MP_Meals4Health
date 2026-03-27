@@ -1,0 +1,3 @@
+void genereateShopList() {}
+
+void recommenMenu() {}
