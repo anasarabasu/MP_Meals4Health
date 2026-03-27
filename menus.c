@@ -265,8 +265,6 @@ void updateFuncSwitch(int OPTION, ingredient FOOD[], int *F_ELEM, recipe RECIPES
             if(*R_ELEM) scanRec(RECIPES, *R_ELEM);
             break;
         case 9: 
-            printf("\nSEARCH RECIPE BY TITLE\n\n");
-
             if(*R_ELEM) searchRec(RECIPES, *R_ELEM);
             break;
         case 10: 
@@ -287,7 +285,7 @@ void updateFuncSwitch(int OPTION, ingredient FOOD[], int *F_ELEM, recipe RECIPES
 //---------------------------------------------------------------------------
 
 int accessMenu(int R_ELEM) {
-    int option = 0;
+    int option = 5;
     string options[9] = {
         /* 00 */ "Import Food-Calorie Info",
         /* 01 */ GRY "Import Recipes\n",
@@ -371,18 +369,20 @@ void accessFuncSwitch(int OPTION, ingredient FOOD[], int *F_ELEM, recipe RECIPES
             }
             break;
         case 3: 
-            printf("\nSEARCH RECIPE BY TITLE\n\n");
-
             if(*R_ELEM) searchRec(RECIPES, *R_ELEM);
             break;
         case 4: 
             if(*R_ELEM) scanRec(RECIPES, *R_ELEM);
             break;
         case 5: 
+            if(*R_ELEM) scanRecByIngredient(RECIPES, *R_ELEM);
             break;
         case 6: 
+            if(*R_ELEM) genereateShopList(RECIPES, *R_ELEM);
             break;
-        case 7: break;
+        case 7: 
+            if(*R_ELEM) recommenMenu(RECIPES, *R_ELEM);
+            break;
     }
 
     CURSOR_POS
@@ -437,13 +437,24 @@ int mainMenu() {
 
 void menuSwitch() {
     ingredient food[50];
-    int fElem = 49;
-    recipe recipes[50];
-    strcpy(recipes[0].name, "1");
-    int rElem = 1;
+    int fElem = 0;
 
+    recipe recipes[50];
+    int rElem = 3;
+
+    strcpy(recipes[0].name, "1");
+    recipes[0].ingredientCount = 1;
+    strcpy(recipes[0].ingredients[0].item, "1");
+
+    strcpy(recipes[1].name, "2");
+    recipes[1].ingredientCount = 1;
+    strcpy(recipes[1].ingredients[0].item, "2");
+
+    strcpy(recipes[2].name, "3");
+    recipes[2].ingredientCount = 1;
+    strcpy(recipes[2].ingredients[0].item, "1");
     int mode = -1;
-    mode = 0;
+    mode = 1;
 
 
     while(mode != -2) { 
@@ -452,8 +463,8 @@ void menuSwitch() {
                 mode = mainMenu();
 
                 // reset
-                fElem = 0;
-                rElem = 0;
+                // fElem = 0;
+                // rElem = 0;
                 break;
             case 0: {
                 // mode = logIn();

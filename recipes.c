@@ -148,7 +148,6 @@ void deleteIngredients(ingredient INGREDIENTS[], int *TOTAL) {
         }
 
         TOP
-
     }
     while(*TOTAL > 1 && input != 0);
 }
@@ -485,10 +484,9 @@ void displayRecipe(recipe RECIPE) {
 }
 
 void scanRec(recipe RECIPES[], int R_ELEM) {
-    char input;
-
     int page = 1;
-
+    
+    char input;
     while(!INPUT_EXIT) {
         TOP
         CLEAN
@@ -505,18 +503,82 @@ void scanRec(recipe RECIPES[], int R_ELEM) {
         if(page > 1) printf(GRY "\n * [ B ] to view previous recipe");
         printf(GRY "\n * [ X ] to exit\n"RESET);
 
+        CURSOR_POS
+
         input = getch();
         if((input == 'n' || input == 'N') && page < R_ELEM) page++;
         if((input == 'b' || input == 'B') && page > 1) page--;
 
-        TOP
     }
 
     printf("\n");
     
 }
 
-void scanRecByIngredient() {}
+void scanRecByIngredient(recipe RECIPES[], int R_ELEM) {
+    printf(LINE "\nSCAN RECIPES BY INGREDIENT\n\n");
+
+    char search[21];
+    printf(LINE2 YLW "\n    Enter ingredient name:\n    " RESET);
+    getStringInput(search,"%20[^\n]s", "\e[1F\e[5G");
+
+    recipe temp[50];
+    int recipesFound = 0;
+
+    int index = 0;
+    while(index < R_ELEM) {
+        int scanIngredients = 0;
+        while(scanIngredients < RECIPES[index].ingredientCount) {
+            if(!strcmp(RECIPES[index].ingredients[scanIngredients].item, search)) {
+                temp[recipesFound] = RECIPES[index];
+                recipesFound++;
+
+
+            }
+            scanIngredients++;
+        }
+        index++;
+    }
+    
+    clearBuffer();
+
+    char input;
+    if(!recipesFound) {
+        printf(
+            RED "\e[2F\e[29G\t\t [!] That item is not used anywhere\n" RESET
+            GRY "\n\n * [ X ] Return update menu\n" RESET
+        );
+        
+        input = getch();
+        while(!INPUT_EXIT) 
+            input = getch();
+
+    }
+    else {
+        printf("\n" LINE2 "\n");
+        
+        int page = 1;
+
+        while(!INPUT_EXIT) {
+            TOP
+            printf("\e[11E");
+            CLEAN 
+            
+            displayRecipe(temp[page-1]);
+
+            if(page < recipesFound) printf(GRY "\n * [ N ] to view next recipe");
+            if(page > 1) printf(GRY "\n * [ B ] to view previous recipe");
+            printf(GRY "\n * [ X ] to exit\n"RESET);
+            
+            CURSOR_POS
+
+            input = getch();
+            if((input == 'n' || input == 'N') && page < recipesFound) page++;
+            if((input == 'b' || input == 'B') && page > 1) page--;
+
+        }
+    }
+}
 
 // returns the index of the matching recipe
 int checkRecipe(recipe RECIPES[], int R_ELEM) {
@@ -528,7 +590,7 @@ int checkRecipe(recipe RECIPES[], int R_ELEM) {
 
     int index = 0;
     int recipeExists = 0;
-    do {
+    while(!recipeExists) {
         while(index < R_ELEM && !recipeExists) {
             recipeExists = !strcmp(RECIPES[index].name, search);
             index++;
@@ -536,35 +598,18 @@ int checkRecipe(recipe RECIPES[], int R_ELEM) {
         
         if(!recipeExists) {
             index = 0;
-
+    
             printf(RED "\e[1F\e[0J\e[25G\t\t[!] This recipe does not exist\e[5G" RESET);
             printf("\n");
             getStringInput(search, "%20[^\n]s", "\e[1F\e[5G");
         }
+
     }
-    while(!recipeExists);
 
     printf("\e[1F\e[25G\t\t\e[0J\n"); // removes the [!] comment
 
     return index-1;
 }
-
-void searchRec(recipe RECIPES[], int R_ELEM) {
-    int index = checkRecipe(RECIPES, R_ELEM);
-    
-    printf("\n\n");
-    displayRecipe(RECIPES[index]);
-    
-    printf(GRY" * [ X ] Return update menu\n" RESET);
-    
-    char input;
-    input = getch();
-    while(!INPUT_EXIT) 
-        input = getch();
-
-    clearBuffer();  
-}
-
 
 
 void deleteRec(recipe RECIPES[], int *R_ELEM) {
@@ -600,6 +645,25 @@ void deleteRec(recipe RECIPES[], int *R_ELEM) {
         TOP
     }
 }
+
+void searchRec(recipe RECIPES[], int R_ELEM) {
+    printf(LINE "\nSEARCH RECIPE BY TITLE\n\n");
+
+    int index = checkRecipe(RECIPES, R_ELEM);
+    
+    printf("\n" LINE2 "\n\n");
+    displayRecipe(RECIPES[index]);
+    
+    printf(GRY" * [ X ] Return update menu\n" RESET);
+    
+    char input;
+    input = getch();
+    while(!INPUT_EXIT) 
+        input = getch();
+
+    clearBuffer();  
+}
+
 
 void exportRec(recipe RECIPES[], int R_ELEM) {
     printf(LINE "\nEXPORT RECIPES\n\n");

@@ -281,6 +281,7 @@ void delayedLoad() {
 
 #include "recipes.c"
 #include "cal.c"
+#include "access.c"
 #include "menus.c"
 
 int main() {
