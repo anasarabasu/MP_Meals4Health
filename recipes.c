@@ -555,13 +555,17 @@ void scanRecByIngredient(recipe RECIPES[], int R_ELEM) {
 
     }
     else {
-        printf("\n" LINE2 "\n");
+        printf(
+            GRY "\n    * Found %d!\n" RESET
+            "\n" LINE2 "\n",
+            recipesFound
+        );
         
         int page = 1;
 
         while(!INPUT_EXIT) {
             TOP
-            printf("\e[11E");
+            printf("\e[13E");
             CLEAN 
             
             displayRecipe(temp[page-1]);
@@ -673,7 +677,7 @@ void exportRec(recipe RECIPES[], int R_ELEM) {
         printf(GRY "    * File saved successfully!" RESET);
 
         FILE *file;
-        if(file = fopen(fileName, "w")) { 
+        if((file = fopen(fileName, "w"))) { 
             int index = 0;
             while(index < R_ELEM) {
                 fprintf(
@@ -743,7 +747,7 @@ void importRec(recipe RECIPES[], int *R_ELEM) {
         printf(GRY "    * File opened successfully!\n\n\n" RESET);
 
         FILE *file;
-        if(file = fopen(fileName, "r")) { 
+        if((file = fopen(fileName, "r"))) { 
             recipe temp;
 
             int index = 0;

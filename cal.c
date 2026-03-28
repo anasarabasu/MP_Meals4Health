@@ -86,10 +86,10 @@ void saveCal(ingredient FOOD[], int F_ELEM) {
 
     filename fileName;
     if(checkFileExists(fileName, 1)) {
-        printf(GRN "    [O] File saved successfully!" RESET);
+        printf(GRN "\n    [O] File saved successfully!" RESET);
 
         FILE *file;
-        if(file = fopen(fileName, "w")) { 
+        if((file = fopen(fileName, "w"))) { 
             int index = 0;
             while(index < F_ELEM) {
                 fprintf(
@@ -126,7 +126,7 @@ void loadCal(ingredient FOOD[], int *F_ELEM) {
         printf(GRN "    [O] File opened successfully!\n\n\n" RESET);
 
         FILE *file;
-        if(file = fopen(fileName, "r")) { 
+        if((file = fopen(fileName, "r"))) { 
             ingredient temp;
 
             while(
@@ -192,7 +192,7 @@ void loadCal(ingredient FOOD[], int *F_ELEM) {
                                 }
                                 displayIndex++;
                             }
-                            printf("\n\e[9F\0[0J");
+                            printf("\n\e[9F\e[0J");
                             
                             input = getch();
                             navigation(input, &itemExists, 'y');

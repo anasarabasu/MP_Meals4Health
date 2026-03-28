@@ -1,6 +1,4 @@
 int modRecMenu(recipe RECIPE) {
-    char input;
-    
     int option = 0;
     string options[5] = {
         "Add Ingredient",
@@ -13,13 +11,12 @@ int modRecMenu(recipe RECIPE) {
     if(RECIPE.ingredientCount == 1) strcpy(options[1], GRY "Delete Ingredient    " RESET RED "[!] User is not allowed to delete all ingredients\n");
     if(RECIPE.stepCount == 1) strcpy(options[3], GRY "Delete Step    " RESET RED "[!] User is not allowed to delete all ingredients\n");
     
-    CURSOR_POS
-    printf(" ");
-    int space = 0; 
-    for(space; space <= 24; space++) printf("\n");
+    moveDisplay();
 
+    char input;
     while(!INPUT_ENTER) {
         TOP
+        CLEAN
 
         printf(LINE "\nMODIFY RECIPE\n\n");
         
@@ -63,10 +60,7 @@ void modRecSwitch(recipe RECIPES[], int R_ELEM) {
     
     
     while(option != 4) {
-        printf(" ");
-        int space = 0; 
-        for(space; space <= 24; space++) printf("\n");
-        TOP
+        moveDisplay();
 
         switch(option) {
             case 0: 
@@ -142,16 +136,15 @@ int logIn() {
     while(!INPUT_EXIT)
         input = getch();
 
-    printf(" ");
-    int space = 0; 
-    for(space; space <= 24; space++) printf("\n");
+    moveDisplay();
 
     return canProceed;
 }
 
 
 int updateMenu(int F_ELEM, int R_ELEM) {
-    int option = 11;
+    int option = 0;
+    option = 11;
     string options[13] = {
         /* 00 */ "Add Food-Calorie Info",
         /* 01 */ "View Food-Calorie Chart",
@@ -189,6 +182,9 @@ int updateMenu(int F_ELEM, int R_ELEM) {
     
     char input;
     while(!INPUT_ENTER) {
+        TOP
+        CLEAN
+
         printf(LINE"\nUPDATE MODE\n\n");
         
         option = selectionLooper(option, 12);
@@ -206,8 +202,6 @@ int updateMenu(int F_ELEM, int R_ELEM) {
 
         input = getch();
         navigation(input, &option, 'y');
-
-        TOP
     }
 
     if(option == 12) option = -1;
@@ -216,11 +210,7 @@ int updateMenu(int F_ELEM, int R_ELEM) {
 }
 
 void updateFuncSwitch(int OPTION, ingredient FOOD[], int *F_ELEM, recipe RECIPES[], int *R_ELEM) {
-    CURSOR_POS
-    printf(" ");
-    int space = 0; 
-    for(space; space <= 24; space++) printf("\n");
-    TOP
+    moveDisplay();
 
     switch(OPTION) {
         // CAL-
@@ -274,18 +264,13 @@ void updateFuncSwitch(int OPTION, ingredient FOOD[], int *F_ELEM, recipe RECIPES
             if(*R_ELEM != 50) importRec(RECIPES, R_ELEM);
             break;
     }
-
-    CURSOR_POS
-    printf(" ");
-    space = 0; 
-    for(space; space <= 24; space++) printf("\n");
-    TOP
 }
 
 //---------------------------------------------------------------------------
 
 int accessMenu(int R_ELEM) {
-    int option = 5;
+    int option = 0;
+    option = 6;
     string options[9] = {
         /* 00 */ "Import Food-Calorie Info",
         /* 01 */ GRY "Import Recipes\n",
@@ -313,6 +298,9 @@ int accessMenu(int R_ELEM) {
     
     char input;
     while(!INPUT_ENTER) {
+        TOP
+        CLEAN
+
         printf(LINE "\n ACCESS MODE\n\n");
 
         option = selectionLooper(option, 8);
@@ -333,8 +321,6 @@ int accessMenu(int R_ELEM) {
 
         input = getch();
         navigation(input, &option, 'y');
-
-        TOP
     }
 
     if(option == 8) option = -1;
@@ -342,11 +328,7 @@ int accessMenu(int R_ELEM) {
 }
 
 void accessFuncSwitch(int OPTION, ingredient FOOD[], int *F_ELEM, recipe RECIPES[], int *R_ELEM) {
-    CURSOR_POS
-    printf(" ");
-    int space = 0; 
-    for(space; space <= 24; space++) printf("\n");
-    TOP
+    moveDisplay();
 
     switch(OPTION) {
         case 0: 
@@ -384,12 +366,6 @@ void accessFuncSwitch(int OPTION, ingredient FOOD[], int *F_ELEM, recipe RECIPES
             if(*R_ELEM) recommenMenu(RECIPES, *R_ELEM);
             break;
     }
-
-    CURSOR_POS
-    printf(" ");
-    space = 0; 
-    for(space; space <= 24; space++) printf("\n");
-    TOP
 }
 
 
@@ -400,18 +376,17 @@ void accessFuncSwitch(int OPTION, ingredient FOOD[], int *F_ELEM, recipe RECIPES
 //
 // @RETURN the chosen mode option or exit the program
 int mainMenu() {
+    int option = 0;
     char options[3][90] = {
         "Update Recipe Box",
         "Access Recipe Box",
         "Exit Program"
     };
 
-    int mode = 0;
-
-    int x = 0;
     char input;
     while(!INPUT_ENTER) { // selection carousel
         TOP
+        CLEAN
 
         printf(
             LINE
@@ -420,19 +395,19 @@ int mainMenu() {
             "\n"
         );
         
-        mode = selectionLooper(mode, 2);
-        selectionCarousel(mode, 3, options, YLW);
+        option = selectionLooper(option, 2);
+        selectionCarousel(option, 3, options, YLW);
         printf(GRY "\n * [ UP / DOWN ] to navigate\n * [ ENTER ] to select\n" RESET);
         
         CURSOR_POS
         
         input = getch();
-        navigation(input, &mode, 'y');
+        navigation(input, &option, 'y');
     }
 
-    if(mode == 2) mode *= -1;
+    if(option == 2) option *= -1;
 
-    return mode;
+    return option;
 }
 
 void menuSwitch() {
@@ -496,11 +471,7 @@ void menuSwitch() {
             break;
         }
         
-        CURSOR_POS
-        printf(" ");
-        int space = 0; 
-        for(space; space <= 24; space++) printf("\n");
-        TOP
+        moveDisplay();
     }
     
 }

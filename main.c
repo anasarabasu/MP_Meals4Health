@@ -201,7 +201,7 @@ int checkFileExists(filename FILENAME, int SAVE) { // 0 load // 1 save
     char input;
 
     FILE *file;
-    if(file = fopen(FILENAME, "r")) { // checks if file exists
+    if((file = fopen(FILENAME, "r"))) { // checks if file exists
         printf("\n    File exists, continue?" GRY "  [ Y / N ]\n" RESET);
         
         input = getch();
@@ -268,15 +268,15 @@ void selectionCarousel(int SELECTED, int MAX, string OPTIONS[], char * COLOUR) {
     }
 }
 
-// Dot dot dot
-void delayedLoad() {
-    int index;
-    for(index = 0; index != 3; index++) {
-        sleep(1);
-        printf(GRY " .\n" RESET);
-    }
+void moveDisplay() {
+    CURSOR_POS
+    printf(" ");
+
+    int space; 
+    for(space = 0; space <= 24; space++) printf("\n");
 
     TOP
+    CLEAN
 }
 
 #include "recipes.c"
