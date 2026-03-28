@@ -38,7 +38,7 @@ typedef char filename[21];
 
 struct ingredientStruct {
     char item[21];
-    int quantity;
+    float quantity;
     char unit[16];
     int calories;
 };
@@ -163,7 +163,7 @@ int getStringInput(char * STRING, char * IDENTIFIER, char * POS) {
 // @param POS - cursor offset
 //
 // @RETURN true if input is of numerical value
-int getIntInput(int * INTEGER, char * POS) {
+int getNumInput(float *NUM, char *POS, int ZERO_INC, int returnInt) {
     int isValid = 1;
 
     char ch = getchar();
@@ -175,22 +175,51 @@ int getIntInput(int * INTEGER, char * POS) {
     }
     ungetc(ch, stdin); // puts back the char to the input stream
 
-    *INTEGER = 0;
+    *NUM = 0;
     char garbage[1] = {'\0'};
 
-    isValid = scanf("%d%1[^\n]s", INTEGER, garbage) && (garbage[0] == '\0' || garbage[0] == '\r');
+    if(returnInt) {
+        int integer;
+        isValid = scanf("%d%1[^\n]s", &integer, garbage) && (garbage[0] == '\0' || garbage[0] == '\r');
+        *NUM = integer;
 
-    if(!isValid) { // checks for valid int input
+        if(!isValid) { // checks for valid int input
+            clearBuffer();
+
+            printf("\e[1F\e[0J\e[20G\t\t" RED "[!] Please enter only whole numbers%s" RESET, POS);
+            isValid = getNumInput(NUM, POS, ZERO_INC, returnInt);
+        }
+    }
+    else {
+        isValid = scanf("%f%1[^\n]s", NUM, garbage) && (garbage[0] == '\0' || garbage[0] == '\r');
+
+        if(!isValid) { // checks for valid float input
+            clearBuffer();
+
+            printf("\e[1F\e[0J\e[20G\t\t" RED "[!] Please enter only valid numerical values%s" RESET, POS);
+            isValid = getNumInput(NUM, POS, ZERO_INC, returnInt);
+        }
+    }
+
+    if(!ZERO_INC && *NUM <= 0) {
         clearBuffer();
 
-        printf("\e[1F\e[0J\e[20G\t\t" RED "[!] Please enter only numerical values%s" RESET, POS);
-        isValid = getIntInput(INTEGER, POS);
+        printf("\e[1F\e[0J\e[20G\t\t" RED "[!] Please enter a valid amount%s" RESET, POS);
+        isValid = getNumInput(NUM, POS, ZERO_INC, returnInt);
     }
+
     printf("\e[1F\e[20G\t\t\e[0J\n"); // removes the [!] comment
 
     return isValid;
 }
 
+void getIntInput(int *NUM, char *POS, int ZERO_INC, int returnInt) {
+        float temp;
+        getNumInput(&temp, "\e[5G" RESET, ZERO_INC, returnInt);
+        *NUM = (int)temp;
+}
+
+//
 int checkFileExists(filename FILENAME, int SAVE) { // 0 load // 1 save
     printf(YLW"    File Name: \n    " RESET);
     getStringInput(FILENAME, "%17[^\n]s", "\e[1F\e[5G");
@@ -246,11 +275,12 @@ int checkFileExists(filename FILENAME, int SAVE) { // 0 load // 1 save
     return proceed; // 0 doesnt exist // 1 exist then proceed  // -1 exists but cancel
 }
 
-int calculateSize(int QUANTITY, int ORIGINAL, int NEW) {
-    int size = 999;
+//
+double calculateServingSize(float QUANTITY, float ORIGINAL, float NEW) {
+    double scale = 0;
+    if(ORIGINAL) scale = NEW / ORIGINAL;
 
-
-    return size;
+    return QUANTITY * scale;
 }
 
 // DISPLAY -----------------------------------------------------------------------------------------

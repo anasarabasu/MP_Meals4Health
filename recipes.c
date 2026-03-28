@@ -51,8 +51,8 @@ void addIngredients(ingredient INGREDIENT[], int *TOTAL, int MAX, int INDENT) {
         //------------------------------------------
         
         printf(YLW "\n%s    Quantity:\n%s    " RESET, indent, indent);
-        if(INDENT) getIntInput(&INGREDIENT[ingredientIndex].quantity, "\e[9G" RESET);
-        else getIntInput(&INGREDIENT[ingredientIndex].quantity, "\e[5G" RESET);
+        if(INDENT) getNumInput(&INGREDIENT[ingredientIndex].quantity, "\e[9G" RESET, 0, 0);
+        else getNumInput(&INGREDIENT[ingredientIndex].quantity, "\e[5G" RESET, 0, 0);
         clearBuffer();
 
         
@@ -68,8 +68,9 @@ void addIngredients(ingredient INGREDIENT[], int *TOTAL, int MAX, int INDENT) {
 
         if(MAX == 50) {
             printf(YLW "\n%s    Calorie Count:\n%s    " RESET, indent, indent);
-            // if(INDENT) getIntInput(&INGREDIENT[ingredientIndex].calories, "\e[9G" RESET);
-            getIntInput(&INGREDIENT[ingredientIndex].calories, "\e[5G" RESET);
+            float temp;
+            getNumInput(&temp, "\e[5G" RESET, 0, 1);
+            INGREDIENT[ingredientIndex].calories = (int) temp;
             clearBuffer();
         }
         
@@ -104,7 +105,10 @@ void addIngredients(ingredient INGREDIENT[], int *TOTAL, int MAX, int INDENT) {
 void deleteIngredients(ingredient INGREDIENTS[], int *TOTAL) {
     int input = 0;
     do {
-        printf("\nDELETE INGREDIENTS\n\n");
+        TOP
+        CLEAN
+
+        printf(LINE "\nDELETE INGREDIENTS\n\n");
 
         int index = 0;
         while(index < *TOTAL) {
@@ -125,12 +129,11 @@ void deleteIngredients(ingredient INGREDIENTS[], int *TOTAL) {
             "\n    "
         );
 
-        getIntInput(&input, "\e[5G" RESET);
-
+        getIntInput(&input, "\e[5G" RESET, 1, 1);
         while(input > *TOTAL) {
             clearBuffer();
             printf("\e[1F\e[0J\e[20G\t\t" RED "[!] Please enter a valid number\e[5G" RESET);
-            getIntInput(&input, "\e[5G" RESET);
+            getIntInput(&input, "\e[5G" RESET, 1, 1);
         }
 
         printf("\e[1F\e[20G\t\t\e[0J\n"); // removes the [!] comment
@@ -146,8 +149,6 @@ void deleteIngredients(ingredient INGREDIENTS[], int *TOTAL) {
 
             (*TOTAL)--;
         }
-
-        TOP
     }
     while(*TOTAL > 1 && input != 0);
 }
@@ -191,7 +192,10 @@ void addSteps(char STEPS[15][71], int *R_ELEM, int MAX, int INDENT) {
 void deleteSteps(char STEPS[15][71], int *R_ELEM) {
     int input = 0;
     do {
-        printf("\nDELETE STEPS\n\n");
+        TOP
+        CLEAN
+
+        printf(LINE "\nDELETE STEPS\n\n");
 
         int index = 0;
         while(index < *R_ELEM) {
@@ -212,11 +216,11 @@ void deleteSteps(char STEPS[15][71], int *R_ELEM) {
             "\n    "
         );
 
-        getIntInput(&input, "\e[5G" RESET);
+        getIntInput(&input, "\e[5G" RESET, 1, 1);
         while(input > *R_ELEM) {
             clearBuffer();
             printf("\e[1F\e[0J\e[20G\t\t" RED "[!] Please enter a valid number\e[5G" RESET);
-            getIntInput(&input, "\e[5G" RESET);
+            getIntInput(&input, "\e[5G" RESET, 1, 1);
         }
 
         printf("\e[1F\e[20G\t\t\e[0J\n"); // removes the [!] comment
@@ -232,8 +236,6 @@ void deleteSteps(char STEPS[15][71], int *R_ELEM) {
 
             (*R_ELEM)--;
         }
-
-        TOP
     }
     while(*R_ELEM > 1 && input != 0);
 }
@@ -323,7 +325,8 @@ void addRecipe(recipe RECIPES[], int *R_ELEM) {
         //------------------------------------------
 
         printf(PRP "\n\n    Number of Servings:\n    " RESET);
-        getIntInput(&RECIPES[recipeIndex].servings, "\e[5G");
+
+        getIntInput(&RECIPES[recipeIndex].servings, "\e[5G" RESET, 0, 1);
         clearBuffer();
 
         //------------------------------------------
@@ -404,7 +407,6 @@ void addRecipe(recipe RECIPES[], int *R_ELEM) {
 
 void listRecipeTitles(recipe RECIPES[], int R_ELEM, char * COLOUR) {
     recipe temp;
-    // char temp[20];
     int min = 0;
     
     int sortIndex = 0;
@@ -459,7 +461,7 @@ void displayRecipe(recipe RECIPE) {
     printf("\n    Ingredients:\n");
     while(ingredientIndex < RECIPE.ingredientCount) {
         printf(
-            "        %d %s %s    %d calories\n",
+            "        %f %s %s    %d calories\n",
             RECIPE.ingredients[ingredientIndex].quantity,
             RECIPE.ingredients[ingredientIndex].unit,
             RECIPE.ingredients[ingredientIndex].item,
@@ -618,6 +620,9 @@ void deleteRec(recipe RECIPES[], int *R_ELEM) {
     char input;
 
     while (!INPUT_EXIT && *R_ELEM != 0) {
+        TOP
+        CLEAN
+
         printf(LINE "\nDELETE RECIPES\n\n");
 
         int index = checkRecipe(RECIPES, *R_ELEM);
@@ -632,8 +637,8 @@ void deleteRec(recipe RECIPES[], int *R_ELEM) {
         (*R_ELEM)--;
         
         printf(
-            GRY "\n"
-            " * Recipe #%02d successfully deleted\n\n"
+            GRY "\n\n"
+            " * Recipe #%02d successfully deleted\n\n\n"
             " * [ ENTER ] to continue deleting recipes\n"
             " * [ X ] to finish\n"
             RESET,
@@ -643,8 +648,6 @@ void deleteRec(recipe RECIPES[], int *R_ELEM) {
         input = getch();
         while(!INPUT_ENTER && !INPUT_EXIT) 
             input = getch();
-
-        TOP
     }
 }
 
@@ -689,7 +692,7 @@ void exportRec(recipe RECIPES[], int R_ELEM) {
                 while(recIndex < RECIPES[index].ingredientCount) {
                     fprintf(
                         file,
-                        "%d %s %s\n",
+                        "%f %s %s\n",
                         RECIPES[index].ingredients[recIndex].quantity,
                         RECIPES[index].ingredients[recIndex]. unit,
                         RECIPES[index].ingredients[recIndex].item
@@ -730,11 +733,20 @@ void exportRec(recipe RECIPES[], int R_ELEM) {
 }
 
 
-void parseString() {}
+void parseString(FILE *file) {
+    // char ch[21];
+    // int x = 0;
 
+    // // while(fscanf(file, "%c", &ch[x]) && ch[x] != EOF && ch[x] != '\n') {
+    // //     x++;
+    // // }
+    // fscanf(file, "%s\n", ch) ;
+    // printf("%s", ch);
+    // getch();
+}
 
 void importRec(recipe RECIPES[], int *R_ELEM) {
-    printf(LINE "\nEXPORT RECIPES\n\n");
+    printf(LINE "\nIMPORT RECIPES\n\n");
 
     filename fileName;
     if(checkFileExists(fileName, 0)) {
@@ -744,50 +756,54 @@ void importRec(recipe RECIPES[], int *R_ELEM) {
         if((file = fopen(fileName, "r"))) { 
             recipe temp;
 
+            // parseString(file);
+            
             int index = 0;
             while(
                 fscanf(
                     file, 
-                    "%s",
-                    // "%d %s\n",
+                    " %s"
+                    ,
+                    // "%d %s\n"
                     // "Ingredients %d\n",
                     temp.name
-                    // temp.servings,
-                    // temp.classification
-                    // temp.ingredientCount
-                ) 
+                    // ,
+                    // &temp.servings,
+                    // temp.classification,
+                    // &temp.ingredientCount
+                ) == 1
 
-                && *R_ELEM < 50
+                // && *R_ELEM < 50
             ) {
-                // int recIndex = 0;
-                // while(temp.ingredientCount) {
-                //     fprintf(
-                //         file,
-                //         "%d %s %s\n",
-                //         temp.ingredients[recIndex].quantity,
-                //         temp.ingredients[recIndex]. unit,
-                //         temp.ingredients[recIndex].item
-                //     );
-                //     recIndex++;
-                // }
+            //     // int recIndex = 0;
+            //     // while(temp.ingredientCount) {
+            //     //     fprintf(
+            //     //         file,
+            //     //         "%f %s %s\n",
+            //     //         temp.ingredients[recIndex].quantity,
+            //     //         temp.ingredients[recIndex]. unit,
+            //     //         temp.ingredients[recIndex].item
+            //     //     );
+            //     //     recIndex++;
+            //     // }
 
-                // fscanf(
-                //     file,
-                //     "Steps %d\n",
-                //     temp.stepCount
-                // );
+            //     // fscanf(
+            //     //     file,
+            //     //     "Steps %d\n",
+            //     //     temp.stepCount
+            //     // );
 
-                // recIndex = 0;
-                // while(recIndex < temp.stepCount) {
-                //     fprintf(
-                //         file,
-                //         "%s\n",
-                //         temp.steps[recIndex]
-                //     );
-                //     recIndex++;
-                // }    
+            //     // recIndex = 0;
+            //     // while(recIndex < temp.stepCount) {
+            //     //     fprintf(
+            //     //         file,
+            //     //         "%s\n",
+            //     //         temp.steps[recIndex]
+            //     //     );
+            //     //     recIndex++;
+            //     // }    
                 index++;
-                printf("%d", index);
+                printf("%s\n", temp.name);
             }
         }
         fclose(file);

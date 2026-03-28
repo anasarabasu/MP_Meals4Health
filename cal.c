@@ -48,7 +48,7 @@ void viewCalInfo(ingredient FOOD[], int F_ELEM) {
         int displayIndex = 0;
         while(displayIndex < 10 && displayIndex != rows) {
             printf(
-                " |  %02d  |    %-20s    ||    %-19d    ||    %-15s    ||    %-19d    |\n"
+                " |  %02d  |    %-20s    ||    %-19f    ||    %-15s    ||    %-19d    |\n"
                 " |      |    %-20s    ||    %-19s    ||    %-15s    ||    %-19s    |\n"
                 LINE2, 
                 displayIndex + 1 + displayOffset,
@@ -95,7 +95,7 @@ void saveCal(ingredient FOOD[], int F_ELEM) {
                 fprintf(
                     file, 
                     "%s\n"
-                    "%d %s %d\n\n",
+                    "%f %s %d\n\n",
                     FOOD[index].item,
                     FOOD[index].quantity,
                     FOOD[index].unit,
@@ -129,8 +129,8 @@ void loadCal(ingredient FOOD[], int *F_ELEM) {
             while(
                 fscanf(
                     file,
-                    "%s\n"
-                    "%d %s %d\n\n",
+                    "%[^\n]s\n" //afajlfasjklasklsaklasdajkl
+                    "%f %s %d\n\n",
                     temp.item,
                     &temp.quantity,
                     temp.unit,
@@ -162,10 +162,10 @@ void loadCal(ingredient FOOD[], int *F_ELEM) {
                             string display[2] = {
                                 "OLD\n"
                                 "        %s\n"
-                                "        %d %s %d\n\n",
+                                "        %f %s %d\n\n",
                                 "NEW\n"
                                 "        %s\n"
-                                "        %d %s %d\n\n",
+                                "        %f %s %d\n\n",
                             };
                             
                             while(displayIndex < 2) {
@@ -176,7 +176,7 @@ void loadCal(ingredient FOOD[], int *F_ELEM) {
                                     printf(
                                         display[displayIndex], 
                                         FOOD[index].item,
-                                        FOOD[index]. quantity,FOOD[index].unit, FOOD[index].calories
+                                        FOOD[index]. quantity, FOOD[index].unit, FOOD[index].calories
                                     );    
                                 }
                                 else {
@@ -202,7 +202,7 @@ void loadCal(ingredient FOOD[], int *F_ELEM) {
                 if(itemExists) {
                     printf(
                         "    %-21s\n"
-                        "    %d %s %d\n\e[0J",
+                        "    %f %s %d\n\e[0J",
                         temp.item,
                         temp.quantity,
                         temp.unit,

@@ -2,14 +2,14 @@ int modRecMenu(recipe RECIPE) {
     int option = 0;
     string options[5] = {
         "Add Ingredient",
-        "Delete Ingredient\n",
-        "Add Step",
+        "Add Step\n",
+        "Delete Ingredient",
         "Delete Step\n",
         "Return to Update Menu"
     };
 
-    if(RECIPE.ingredientCount == 1) strcpy(options[1], GRY "Delete Ingredient    " RESET RED "[!] User is not allowed to delete all ingredients\n");
-    if(RECIPE.stepCount == 1) strcpy(options[3], GRY "Delete Step    " RESET RED "[!] User is not allowed to delete all ingredients\n");
+    if(RECIPE.ingredientCount == 1) strcpy(options[2], GRY "Delete Ingredient    " RESET RED "[!] User is not allowed to delete all ingredients");
+    if(RECIPE.stepCount == 1) strcpy(options[3], GRY "Delete Step    " RESET RED "[!] User is not allowed to delete all steps\n");
     
     moveDisplay();
 
@@ -24,7 +24,8 @@ int modRecMenu(recipe RECIPE) {
         printf(LINE2 "\n");
         
         option = selectionLooper(option, 4);
-        selectionCarousel(option, 5, options, PRP);
+        if(option < 2) selectionCarousel(option, 5, options, YLW);
+        else selectionCarousel(option, 5, options, PRP);
         
         printf(
             GRY 
@@ -57,8 +58,6 @@ void modRecSwitch(recipe RECIPES[], int R_ELEM) {
     CLEAN
 
     int option = modRecMenu(RECIPES[recipeIndex]);
-    
-    
     while(option != 4) {
         moveDisplay();
 
@@ -68,13 +67,13 @@ void modRecSwitch(recipe RECIPES[], int R_ELEM) {
                 addIngredients(RECIPES[recipeIndex].ingredients, &RECIPES[recipeIndex].ingredientCount, 20, 0);
                 break;
             case 1:
+                printf(LINE "\nADD STEPS\n\n");
+                addSteps(RECIPES[recipeIndex].steps, &RECIPES[recipeIndex].stepCount, 15, 0);
+                break;
+            case 2:
                 if(RECIPES[recipeIndex].ingredientCount > 1) 
                     deleteIngredients(RECIPES[recipeIndex].ingredients, &RECIPES[recipeIndex].ingredientCount);
                 
-                break;
-            case 2:
-                printf(LINE "\nADD STEPS\n\n");
-                addSteps(RECIPES[recipeIndex].steps, &RECIPES[recipeIndex].stepCount, 15, 0);
                 break;
             case 3:
                 if(RECIPES[recipeIndex].stepCount > 1) 
@@ -269,7 +268,7 @@ int accessMenu(int R_ELEM) {
     int option = 0;
     option = 6;
     string options[9] = {
-        /* 00 */ "Import Food-Calorie Info",
+        /* 00 */ "Load Calorie Info",
         /* 01 */ GRY "Import Recipes\n",
 
         /* 02 */ "List Recipe Titles",
@@ -421,8 +420,7 @@ void menuSwitch() {
     recipes[2].ingredientCount = 1;
     strcpy(recipes[2].ingredients[0].item, "1");
     int mode = -1;
-    mode = 1;
-
+    mode = 0;
 
     while(mode != -2) { 
         switch(mode) { 

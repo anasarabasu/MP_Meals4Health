@@ -14,7 +14,7 @@ void genereateShopList(recipe RECIPES[], int R_ELEM) {
     int listSize = 0;
     int input = 67;
     while(listSize < 50 && input != 0) {
-        getIntInput(&input, "\e[5G" RESET);
+        getIntInput(&input, "\e[5G" RESET, 1, 1);
 
         if(input > R_ELEM) printf(RED "\e[1F\e[0J\e[20G\t\t[!] Please enter a valid recipe number\n");
         else {
@@ -40,7 +40,8 @@ void genereateShopList(recipe RECIPES[], int R_ELEM) {
 
     if(listSize) {
         printf(YLW "\n    Enter the number of people to cook for:\n    " RESET);
-        getIntInput(&input, "\e[5G" RESET);
+
+        getIntInput(&input, "\e[5G" RESET, 0, 1);
         clearBuffer();
 
         printf(
@@ -52,10 +53,10 @@ void genereateShopList(recipe RECIPES[], int R_ELEM) {
         while(index < listSize) {
             int ingredientIndex = 0;
             while(ingredientIndex < temp[index].ingredientCount) {
-                temp[index].ingredients[ingredientIndex].quantity = calculateSize(temp[index].ingredients[ingredientIndex].quantity, temp[index].servings, input);
+                temp[index].ingredients[ingredientIndex].quantity = calculateServingSize(temp[index].ingredients[ingredientIndex].quantity, temp[index].servings, input);
 
                 printf(
-                    "        %d) %d %s %s\n",
+                    "        %d) %f %s %s\n",
                     ingredientIndex+1,
                     temp[index].ingredients[ingredientIndex].quantity,
                     temp[index].ingredients[ingredientIndex].unit,
@@ -70,18 +71,20 @@ void genereateShopList(recipe RECIPES[], int R_ELEM) {
         printf("save?");
         getch();
     }
-    else printf(GRY "\n\n * Empty list");
 
     printf(GRY"\n * [ X ] Return to menu\n" RESET);
     confirmBack();
 }
 
 void recommenMenu(recipe RECIPES[], int R_ELEM) {
-    printf(LINE "\nRECOMMEND MENU\n\n");
+    printf(
+        LINE "\nRECOMMEND MENU\n\n"
+        YLW "    Enter target calorie intake:\n    " RESET
+    );
 
-    int input;
-    printf(YLW "    Enter target calorie intake:\n    " RESET);
-    getIntInput(&input, "\e[5G" RESET);
+    int input = 0;
+    getIntInput(&input, "\e[5G" RESET, 0, 1);
+    
     clearBuffer();
 
     if(input) {
@@ -89,7 +92,6 @@ void recommenMenu(recipe RECIPES[], int R_ELEM) {
         printf("save?");
         getch();
     }
-    else printf(GRY "\n\n * Empty list");
 
     printf(GRY"\n * [ X ] Return to menu\n" RESET);
     confirmBack();
