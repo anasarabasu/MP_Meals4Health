@@ -370,7 +370,7 @@ void addRecipe(recipe RECIPES[], int *R_ELEM) {
             "\n\n" LINE2 "\n"
             GRY
             " * [ ENTER ] to continue adding dishes\n"
-            " * [ X ] to return to update menu\n"
+            " * [ X ] to return to menu\n"
             RESET
         );
 
@@ -391,7 +391,7 @@ void addRecipe(recipe RECIPES[], int *R_ELEM) {
         printf(
             // "\n" LINE 
             RED "\n [!] List full\n"
-            GRY " [ X ] Return to update menu\n" RESET
+            GRY " [ X ] Return to menu\n" RESET
         );
         
         char input = getch();
@@ -402,7 +402,7 @@ void addRecipe(recipe RECIPES[], int *R_ELEM) {
     
 }
 
-void listRecipeTitles(recipe RECIPES[], int R_ELEM) {
+void listRecipeTitles(recipe RECIPES[], int R_ELEM, char * COLOUR) {
     recipe temp;
     // char temp[20];
     int min = 0;
@@ -427,7 +427,8 @@ void listRecipeTitles(recipe RECIPES[], int R_ELEM) {
     int printIndex = 0;
     while(printIndex < R_ELEM) {
         printf(
-            PRP "   %02d) " RESET "%-30s",
+            "%s   %02d) " RESET "%-30s",
+            COLOUR,
             printIndex+1, RECIPES[printIndex].name
         );
         
@@ -519,7 +520,7 @@ void scanRecByIngredient(recipe RECIPES[], int R_ELEM) {
     printf(LINE "\nSCAN RECIPES BY INGREDIENT\n\n");
 
     char search[21];
-    printf(LINE2 YLW "\n    Enter ingredient name:\n    " RESET);
+    printf(LINE2 PRP "\n    Enter ingredient name:\n    " RESET);
     getStringInput(search,"%20[^\n]s", "\e[1F\e[5G");
 
     recipe temp[50];
@@ -549,15 +550,12 @@ void scanRecByIngredient(recipe RECIPES[], int R_ELEM) {
             GRY "\n\n * [ X ] Return update menu\n" RESET
         );
         
-        input = getch();
-        while(!INPUT_EXIT) 
-            input = getch();
-
+        confirmBack();
     }
     else {
         printf(
-            GRY "\n    * Found %d!\n" RESET
-            "\n" LINE2 "\n",
+            "\n" LINE2 ""
+            GRY "\n * Found %d!\n\n" RESET,
             recipesFound
         );
         
@@ -586,7 +584,7 @@ void scanRecByIngredient(recipe RECIPES[], int R_ELEM) {
 
 // returns the index of the matching recipe
 int checkRecipe(recipe RECIPES[], int R_ELEM) {
-    listRecipeTitles(RECIPES, R_ELEM);
+    listRecipeTitles(RECIPES, R_ELEM, PRP);
 
     char search[21];
     printf(LINE2 PRP "\n    Enter recipe name:\n    " RESET);
@@ -660,11 +658,7 @@ void searchRec(recipe RECIPES[], int R_ELEM) {
     
     printf(GRY" * [ X ] Return update menu\n" RESET);
     
-    char input;
-    input = getch();
-    while(!INPUT_EXIT) 
-        input = getch();
-
+    confirmBack();
     clearBuffer();  
 }
 
@@ -728,7 +722,7 @@ void exportRec(recipe RECIPES[], int R_ELEM) {
         else printf(RED "\n [!] Error!" RESET);
     }
 
-    printf(GRY"\n\n * [ X ]  Return to main menu\n" RESET);
+    printf(GRY"\n\n * [ X ]  Return to menu\n" RESET);
 
     char input = getch();
     while(!INPUT_EXIT)
@@ -799,7 +793,7 @@ void importRec(recipe RECIPES[], int *R_ELEM) {
         fclose(file);
     }
     
-    printf(GRY"\n * [ X ]  Return to main menu\n" RESET);
+    printf(GRY"\n * [ X ]  Return to menu\n" RESET);
 
     char input = getch();
     while(!INPUT_EXIT)

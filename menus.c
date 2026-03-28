@@ -164,19 +164,19 @@ int updateMenu(int F_ELEM, int R_ELEM) {
     };
     
     if(!F_ELEM) {
-        strcpy(options[1], GRY "( EMPTY )  View Food-Calorie Chart");
-        strcpy(options[2], GRY "( EMPTY )  Save Calorie Info");
+        strcpy(options[1], GRY "( NO DATA )  View Food-Calorie Chart");
+        strcpy(options[2], GRY "( NO DATA )  Save Calorie Info");
         
     }
     if(F_ELEM == 50) strcpy(options[3], GRY "( FULL )  Load Calorie Info\n");
     
     if(!R_ELEM) {
-        strcpy(options[5], GRY "( EMPTY )  Modify Recipe");
-        strcpy(options[6], GRY "( EMPTY )  Delete Recipe");
-        strcpy(options[7], GRY "( EMPTY )  List Recipe Titles");
-        strcpy(options[8], GRY "( EMPTY )  Scan Recipes");
-        strcpy(options[9], GRY "( EMPTY )  Search Recipe by Title");
-        strcpy(options[10], GRY "( EMPTY )  Export Recipes");
+        strcpy(options[5], GRY "( NO DATA )  Modify Recipe");
+        strcpy(options[6], GRY "( NO DATA )  Delete Recipe");
+        strcpy(options[7], GRY "( NO DATA )  List Recipe Titles");
+        strcpy(options[8], GRY "( NO DATA )  Scan Recipes");
+        strcpy(options[9], GRY "( NO DATA )  Search Recipe by Title");
+        strcpy(options[10], GRY "( NO DATA )  Export Recipes");
     }
     if(R_ELEM == 50) strcpy(options[11], GRY "( FULL )  Import Recipes\n");
     
@@ -241,14 +241,11 @@ void updateFuncSwitch(int OPTION, ingredient FOOD[], int *F_ELEM, recipe RECIPES
             printf(LINE "\nLIST RECIPE TITLES\n\n");
 
             if(*R_ELEM) {
-                listRecipeTitles(RECIPES, *R_ELEM);
+                listRecipeTitles(RECIPES, *R_ELEM, PRP);
 
-                printf(GRY " * [ X ] Return to update menu\n" RESET);
-        
-                char input;
-                input = getch();
-                while(!INPUT_EXIT) 
-                    input = getch();
+                CURSOR_POS
+                printf(GRY " * [ X ] Return to menu\n" RESET);
+                confirmBack();
             }
             break;
         case 8: 
@@ -276,8 +273,7 @@ int accessMenu(int R_ELEM) {
         /* 01 */ GRY "Import Recipes\n",
 
         /* 02 */ "List Recipe Titles",
-        /* 03 */ "Search Recipe by Title\n",
-
+        /* 03 */ "Search Recipe by Title",
         /* 04 */ "Scan Recipes",
         /* 05 */ "Scan Recipes by Ingredient\n",
 
@@ -288,12 +284,12 @@ int accessMenu(int R_ELEM) {
     };
 
     if(!R_ELEM) {
-        strcpy(options[2], GRY "( EMPTY )  List Recipe Titles");
-        strcpy(options[3], GRY "( EMPTY )  Search Recipe by Title\n");
-        strcpy(options[4], GRY "( EMPTY )  Scan Recipes");
-        strcpy(options[5], GRY "( EMPTY )  Scan Recipes by Ingredient\n");
-        strcpy(options[6], GRY "( EMPTY )  Generate Shopping List");
-        strcpy(options[7], GRY "( EMPTY )  Recommend Menu\n");
+        strcpy(options[2], GRY "( NO DATA )  List Recipe Titles");
+        strcpy(options[3], GRY "( NO DATA )  Search Recipe by Title\n");
+        strcpy(options[4], GRY "( NO DATA )  Scan Recipes");
+        strcpy(options[5], GRY "( NO DATA )  Scan Recipes by Ingredient");
+        strcpy(options[6], GRY "( NO DATA )  Generate Shopping List");
+        strcpy(options[7], GRY "( INCOMPLETE DATA )  Recommend Menu\n");
     }
     
     char input;
@@ -305,9 +301,8 @@ int accessMenu(int R_ELEM) {
 
         option = selectionLooper(option, 8);
         if(option < 2) selectionCarousel(option, 9, options, YLW);
-        else if(option < 4) selectionCarousel(option, 9, options, PRP);
-        else if(option < 6) selectionCarousel(option, 9, options, YLW);
-        else selectionCarousel(option, 9, options, PRP);
+        else if(option < 6) selectionCarousel(option, 9, options, PRP);
+        else selectionCarousel(option, 9, options, YLW);
 
 
         printf(
@@ -340,14 +335,11 @@ void accessFuncSwitch(int OPTION, ingredient FOOD[], int *F_ELEM, recipe RECIPES
             printf(LINE "\nLIST RECIPE TITLES\n\n");
 
             if(*R_ELEM) {
-                listRecipeTitles(RECIPES, *R_ELEM);
+                listRecipeTitles(RECIPES, *R_ELEM, PRP);
 
-                printf(GRY " * [ X ] Return to update menu\n" RESET);
-        
-                char input;
-                input = getch();
-                while(!INPUT_EXIT) 
-                    input = getch();
+                CURSOR_POS
+                printf(GRY " * [ X ] Return to menu\n" RESET);
+                confirmBack();
             }
             break;
         case 3: 
@@ -363,7 +355,7 @@ void accessFuncSwitch(int OPTION, ingredient FOOD[], int *F_ELEM, recipe RECIPES
             if(*R_ELEM) genereateShopList(RECIPES, *R_ELEM);
             break;
         case 7: 
-            if(*R_ELEM) recommenMenu(RECIPES, *R_ELEM);
+            if(*R_ELEM && *F_ELEM) recommenMenu(RECIPES, *R_ELEM);
             break;
     }
 }

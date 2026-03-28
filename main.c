@@ -246,6 +246,13 @@ int checkFileExists(filename FILENAME, int SAVE) { // 0 load // 1 save
     return proceed; // 0 doesnt exist // 1 exist then proceed  // -1 exists but cancel
 }
 
+int calculateSize(int QUANTITY, int ORIGINAL, int NEW) {
+    int size = 999;
+
+
+    return size;
+}
+
 // DISPLAY -----------------------------------------------------------------------------------------
 
 
@@ -277,6 +284,13 @@ void moveDisplay() {
 
     TOP
     CLEAN
+}
+
+void confirmBack() {
+    char input;
+    input = getch();
+    while(!INPUT_EXIT) 
+        input = getch();
 }
 
 #include "recipes.c"

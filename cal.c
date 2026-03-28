@@ -9,7 +9,7 @@ void addCalInfo(ingredient FOOD[], int *F_ELEM) {
         printf(
             "\n" LINE 
             RED "\n [!] List full\n"
-            GRY " * [ X ] Return to update menu\n" RESET
+            GRY " * [ X ] Return to menu\n" RESET
         );
 
         char input = getch();
@@ -110,11 +110,8 @@ void saveCal(ingredient FOOD[], int F_ELEM) {
         else printf(RED "\n [!] Error!" RESET);
     }
 
-    printf(GRY"\n\n * [ X ]  Return to main menu\n" RESET);
-
-    char input = getch();
-    while(!INPUT_EXIT)
-        input = getch();
+    printf(GRY"\n\n * [ X ]  Return to menu\n" RESET);
+    confirmBack();
 }
 
 
@@ -235,9 +232,6 @@ void loadCal(ingredient FOOD[], int *F_ELEM) {
         fclose(file);
     }
     
-    printf(GRY"\n * [ X ]  Return to main menu\n" RESET);
-
-    char input = getch();
-    while(!INPUT_EXIT)
-        input = getch();
+    printf(GRY"\n * [ X ]  Return to menu\n" RESET);
+    confirmBack();
 }
