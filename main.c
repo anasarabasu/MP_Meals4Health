@@ -8,6 +8,9 @@ students and/or persons, nor did I employ the use of AI in any part of the deliv
                 Ashana Rivera Monsanto, DLSU ID# 12505951
 *********************************************************************************************************/
 
+
+
+
 #include <conio.h>
 #include <math.h>
 #include <stdio.h>
@@ -33,16 +36,14 @@ students and/or persons, nor did I employ the use of AI in any part of the deliv
 #define LINE2 " ------------------------------------------------------------------------------------------------------------------------\n"
 #define LINE3 " --------------------------------------------------------------------------\n"
 
-// HELPERS -----------------------------------------------------------------------------------------
 
-typedef char string[90];
-typedef char filename[21];
+
 
 struct ingredientStruct {
     char item[21];
     float quantity;
     char unit[16];
-    int calories;
+    float calories;
 };
 typedef struct ingredientStruct ingredient;
 
@@ -60,7 +61,12 @@ struct recipeStruct {
 };
 typedef struct recipeStruct recipe;
 
-#define sleep(seconds) Sleep((seconds)*1000)
+
+
+
+// HELPERS -----------------------------------------------------------------------------------------
+
+typedef char string[90];
 
 #define INPUT_ENTER (input == '\r')
 #define INPUT_EXIT (input == 'x' || input == 'X')
@@ -72,6 +78,7 @@ typedef struct recipeStruct recipe;
 // @param MAX - the total number of options
 //
 // @RETURN the in-range selection index
+//
 int selectionLooper(int SELECTED, int MAX) {
     int selected = SELECTED;
     if(SELECTED < 0) selected = MAX;
@@ -80,11 +87,15 @@ int selectionLooper(int SELECTED, int MAX) {
     return selected;
 }
 
+
+
+
 // Increments the selected index according only to the arrow key input type
 //
 // @param INPUT - the character returned from the input call
 // @param *SELECTED - pointer to the selected index
 // @param DIRECTION - determines if navigation goes vertically or horizontally
+//
 void navigation(char INPUT, int *SELECTED, char DIRECTION) {
     switch(INPUT) {
         case 72: // up
@@ -102,6 +113,9 @@ void navigation(char INPUT, int *SELECTED, char DIRECTION) {
     }
 }
 
+
+
+
 // Consumes excess characters to avoid overflow error or input buffer leaking to the next scanf
 void clearBuffer() {
     scanf("%*[^\n]"); 
@@ -118,6 +132,7 @@ void clearBuffer() {
 // @param POS - cursor offset
 //
 // @RETURN true if input contains atleast a non-whitespace character
+//
 int getStringInput(char * STRING, char * IDENTIFIER, char * POS) {
     int isValid = 0;
 
@@ -151,18 +166,25 @@ int getStringInput(char * STRING, char * IDENTIFIER, char * POS) {
         printf(POS); // moves cursor back to previous position using escape characters
         isValid = getStringInput(STRING, IDENTIFIER, POS);
     }
+    scanf("%*[^\n]"); 
 
     return isValid;
 }
 
-// Handles all integer input
-// Validates input as integer
+
+
+
+// Handles all numerical input
+// Validates input as integer or float
 //
-// @param INTEGER - address where int input is stored
+// @param NUM - address where int input is stored
 // @param POS - cursor offset
+// @param ZERO_INC - determines whether zero inclusive or exclusive
+// @param IS_INT - determines if int data type
 //
-// @RETURN true if input is of numerical value
-int getNumInput(float *NUM, char *POS, int ZERO_INC, int returnInt) {
+// @RETURN true if input is of valid numerical value
+//
+int getNumInput(float *NUM, char *POS, int ZERO_INC, int IS_INT) {
     int isValid = 1;
 
     char ch = getchar();
@@ -178,7 +200,7 @@ int getNumInput(float *NUM, char *POS, int ZERO_INC, int returnInt) {
     *NUM = 0;
     char garbage[1] = {'\0'};
 
-    if(returnInt) {
+    if(IS_INT) {
         int integer;
         isValid = scanf("%d%1[^\n]s", &integer, garbage) && (garbage[0] == '\0' || garbage[0] == '\r');
         *NUM = integer;
@@ -187,7 +209,7 @@ int getNumInput(float *NUM, char *POS, int ZERO_INC, int returnInt) {
             clearBuffer();
 
             printf("\e[1F\e[0J\e[20G\t\t" RED "[!] Please enter only whole numbers%s" RESET, POS);
-            isValid = getNumInput(NUM, POS, ZERO_INC, returnInt);
+            isValid = getNumInput(NUM, POS, ZERO_INC, IS_INT);
         }
     }
     else {
@@ -197,15 +219,15 @@ int getNumInput(float *NUM, char *POS, int ZERO_INC, int returnInt) {
             clearBuffer();
 
             printf("\e[1F\e[0J\e[20G\t\t" RED "[!] Please enter only valid numerical values%s" RESET, POS);
-            isValid = getNumInput(NUM, POS, ZERO_INC, returnInt);
+            isValid = getNumInput(NUM, POS, ZERO_INC, IS_INT);
         }
     }
 
-    if(!ZERO_INC && *NUM <= 0 || *NUM < 0) {
+    if((!ZERO_INC && *NUM <= 0) || *NUM < 0) {
         clearBuffer();
 
-        printf("\e[1F\e[0J\e[20G\t\t" RED "[!] Please enter a valid amount%s" RESET, POS, *NUM);
-        isValid = getNumInput(NUM, POS, ZERO_INC, returnInt);
+        printf("\e[1F\e[0J\e[20G\t\t" RED "[!] Please enter a valid amount%s" RESET, POS);
+        isValid = getNumInput(NUM, POS, ZERO_INC, IS_INT);
     }
 
     printf("\e[1F\e[20G\t\t\e[0J\n"); // removes the [!] comment
@@ -213,14 +235,24 @@ int getNumInput(float *NUM, char *POS, int ZERO_INC, int returnInt) {
     return isValid;
 }
 
-void getIntInput(int *NUM, char *POS, int ZERO_INC, int returnInt) {
+// Converts to proper data type
+void getIntInput(int *NUM, char *POS, int ZERO_INC, int IS_INT) {
         float temp;
-        getNumInput(&temp, "\e[5G" RESET, ZERO_INC, returnInt);
+        getNumInput(&temp, "\e[5G" RESET, ZERO_INC, IS_INT);
         *NUM = (int)temp;
 }
 
+
+
+
+// Checks if file exists
 //
-int checkFileExists(filename FILENAME, int SAVE) { // 0 load // 1 save
+// @PARAM FILENAME - where the file name input is store
+// @PARAM SAVE - guard for the load / save function
+// 
+// RETURN 0 file doesnt exist // RETURN 1 file exists then proceed  // RETURN -1 file exists but cancel
+// 
+int checkFileExists(char FILENAME[21], int SAVE) { // 0 load // 1 save
     printf(YLW"    File Name: \n    " RESET);
     getStringInput(FILENAME, "%17[^\n]s", "\e[1F\e[5G");
     strcat(FILENAME, ".txt");
@@ -272,26 +304,39 @@ int checkFileExists(filename FILENAME, int SAVE) { // 0 load // 1 save
     }
 
 
-    return proceed; // 0 doesnt exist // 1 exist then proceed  // -1 exists but cancel
+    return proceed;
 }
 
+
+
+
+// Finds the ratio between the base and new values and applies it to a given number
+// 
+// @PARAM QUANTITY - amount to be recalculated
+// @PARAM ORIGINAL - base unit
+// @PARAM NEW - specified unit
+// 
+// RETURN the new amount // RETURN 0 if ORIGINAL is 0
 //
-double calculateServingSize(float QUANTITY, float ORIGINAL, float NEW) {
-    double scale = 0;
-    if(ORIGINAL) scale = NEW / ORIGINAL;
+double calculateNewAmount(float QUANTITY, float ORIGINAL, float NEW) {
+    float new = 0;
 
-    return QUANTITY * scale;
+    if(ORIGINAL) new = round(QUANTITY * (NEW / ORIGINAL) * 100) / 100;
+
+    return new;
 }
 
-int calculateCalories(int CALORIE, float BASIS, float QUANTITY) {
-    double scale = 0;
-    if(BASIS) scale = QUANTITY / BASIS;
+// Adds all recalculated calorie amount together
+//
+// @PARAM RECIPE - item to parse info from
+// @PARAM CALORIE - calorie info guide
+// @PARAM C_ELEM - total elements in CALORIE
+//
+// RETURN the total calories
+//
+float addCalories(recipe *RECIPE, ingredient CALORIE[], int C_ELEM) {
+    float calories = 0;
 
-    return (int)round(CALORIE * scale);
-}
-
-int addCalories(recipe *RECIPE, ingredient CALORIE[], int C_ELEM) {
-    int calories = 0;
     int ingredientIndex;
     for(ingredientIndex = 0; ingredientIndex < RECIPE->ingredientCount; ingredientIndex++) {
         RECIPE->ingredients[ingredientIndex].calories = 0;
@@ -299,8 +344,8 @@ int addCalories(recipe *RECIPE, ingredient CALORIE[], int C_ELEM) {
         int calorieIndex;
         for(calorieIndex = 0; calorieIndex < C_ELEM; calorieIndex++) {
 
-            if(!strcmp(CALORIE[calorieIndex].item, RECIPE->ingredients[ingredientIndex].item)) 
-                RECIPE->ingredients[ingredientIndex].calories = calculateCalories(CALORIE[calorieIndex].calories, CALORIE[calorieIndex].quantity, RECIPE->ingredients[ingredientIndex].quantity);
+            if(!strcmp(CALORIE[calorieIndex].item, RECIPE->ingredients[ingredientIndex].item))
+                RECIPE->ingredients[ingredientIndex].calories = calculateNewAmount(CALORIE[calorieIndex].calories, CALORIE[calorieIndex].quantity, RECIPE->ingredients[ingredientIndex].quantity);
         }
 
         calories += RECIPE->ingredients[ingredientIndex].calories;
@@ -308,6 +353,9 @@ int addCalories(recipe *RECIPE, ingredient CALORIE[], int C_ELEM) {
     
     return calories;
 }
+
+
+
 
 // DISPLAY -----------------------------------------------------------------------------------------
 
@@ -331,6 +379,7 @@ void selectionCarousel(int SELECTED, int MAX, string OPTIONS[], char * COLOUR) {
     }
 }
 
+// Refocuses display
 void moveDisplay() {
     CURSOR_POS
     printf(" ");
@@ -344,13 +393,16 @@ void moveDisplay() {
 
 void confirmBack() {
     CURSOR_POS
-
-    char input;
-    input = getch();
+    char input = getch();
     while(!INPUT_EXIT) 
         input = getch();
 }
 
+// Random number generator
+//
+// @PARAM RANGE - determines the range of numbers to pick from
+//
+// RETURN a random int within a given range
 int rng(int RANGE) {
     int random = rand() % RANGE;
     return random;
@@ -362,12 +414,9 @@ int rng(int RANGE) {
 #include "menus.c"
 
 int main() {
-	srand(time(NULL)); // fixes persistent rand;
-
+	srand(time(NULL)); // fixes persistent rand and makes it random for each session
     system("cls");
-
     menuSwitch();
-
     printf(" >>> Program terminated\n");
 
     return 0;

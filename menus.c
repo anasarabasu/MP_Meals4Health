@@ -16,7 +16,7 @@ int modRecMenu(recipe RECIPE, ingredient CALORIE[], int C_ELEM) {
     
     moveDisplay();
 
-    char input;
+    char input = '\0';
     while(!INPUT_ENTER) {
         TOP
         CLEAN
@@ -43,10 +43,12 @@ int modRecMenu(recipe RECIPE, ingredient CALORIE[], int C_ELEM) {
         navigation(input, &option, 'y');
         
     }
-    input = '\0';
 
     return option;
 }
+
+
+
 
 void modRecSwitch(recipe RECIPES[], int R_ELEM, ingredient CALORIE[], int C_ELEM) {
     printf(LINE "\nMODIFY RECIPE\n\n");
@@ -84,12 +86,11 @@ void modRecSwitch(recipe RECIPES[], int R_ELEM, ingredient CALORIE[], int C_ELEM
     }
 }
 
+
+
+
 //---------------------------------------------------------------------------
 
-
-// Asks and validates the log-in credentials
-//
-// @RETURNS 0 if log-in details are valid RETURNS -1 if not, matching the mode indices
 int logIn() {
     printf(
         LINE
@@ -107,7 +108,7 @@ int logIn() {
     getStringInput(pass, "%7[^\n]s", "\e[1F\e[15G");
     clearBuffer();
 
-    int canProceed = 0;
+    int canProceed = 1;
     if(strcmp(userName, "admin") || strcmp(pass, "ad1234")) {
         printf(          
             RED "\n [!] Invalid username or password entered\n" 
@@ -116,7 +117,7 @@ int logIn() {
         );
         
 
-        canProceed = -1;
+        canProceed = 0;
     }
     else {
         printf(
@@ -131,6 +132,8 @@ int logIn() {
 
     return canProceed;
 }
+
+
 
 
 int updateMenu(int F_ELEM, int R_ELEM) {
@@ -176,7 +179,7 @@ int updateMenu(int F_ELEM, int R_ELEM) {
         strcpy(options[11], GRY "( FULL )  Import Recipes\n");
     }
     
-    char input;
+    char input = '\0';
     while(!INPUT_ENTER) {
         TOP
         CLEAN
@@ -205,13 +208,17 @@ int updateMenu(int F_ELEM, int R_ELEM) {
     return option;
 }
 
+
+
+
 void updateFuncSwitch(int OPTION, ingredient FOOD[], int *F_ELEM, recipe RECIPES[], int *R_ELEM) {
     moveDisplay();
 
     switch(OPTION) {
         // CAL-
         case 0: 
-            addCalInfo(FOOD, F_ELEM); 
+            printf(LINE "\nADD CALORIE INFO\n" RESET); 
+            if(*F_ELEM < 50) addIngredients(FOOD, F_ELEM, 50, 0);
             break;
         case 1: 
             if(*F_ELEM) viewCalInfo(FOOD, *F_ELEM); 
@@ -262,6 +269,9 @@ void updateFuncSwitch(int OPTION, ingredient FOOD[], int *F_ELEM, recipe RECIPES
     }
 }
 
+
+
+
 //---------------------------------------------------------------------------
 
 int accessMenu(int R_ELEM) {
@@ -290,7 +300,7 @@ int accessMenu(int R_ELEM) {
         strcpy(options[7], GRY "( INCOMPLETE DATA )  Recommend Menu\n");
     }
     
-    char input;
+    char input = '\0';
     while(!INPUT_ENTER) {
         TOP
         CLEAN
@@ -319,6 +329,9 @@ int accessMenu(int R_ELEM) {
     if(option == 8) option = -1;
     return option;
 }
+
+
+
 
 void accessFuncSwitch(int OPTION, ingredient FOOD[], int *F_ELEM, recipe RECIPES[], int *R_ELEM) {
     moveDisplay();
@@ -363,11 +376,9 @@ void accessFuncSwitch(int OPTION, ingredient FOOD[], int *F_ELEM, recipe RECIPES
 
 
 
+
 //---------------------------------------------------------------------------
 
-// menu handler for choosing between the modes
-//
-// @RETURN the chosen mode option or exit the program
 int mainMenu() {
     int option = 0;
     char options[3][90] = {
@@ -376,7 +387,7 @@ int mainMenu() {
         "Exit Program"
     };
 
-    char input;
+    char input = '\0';
     while(!INPUT_ENTER) { // selection carousel
         TOP
         CLEAN
@@ -403,6 +414,9 @@ int mainMenu() {
     return option;
 }
 
+
+
+
 void menuSwitch() {
     ingredient food[50];
     int fElem = 0;
@@ -418,25 +432,25 @@ void menuSwitch() {
             case -1: 
                 mode = mainMenu();
 
-                // reset
                 fElem = 0;
                 rElem = 0;
+
                 isLogged = 0;
                 break;
             case 0: {
-                // if(!isLogged) mode = logIn();
+                if(!isLogged) {
+                    isLogged = logIn();
 
-                TOP
-                
-                int option = 0;
-                if(!mode) {
-                    option = updateMenu(fElem, rElem);
-                    isLogged = 1;
+                    if(!isLogged) mode = -1;
                 }
-                if(option == -1) mode = -1;
-                
-                updateFuncSwitch(option, food, &fElem, recipes, &rElem);
-                
+
+                if(isLogged) {
+                    TOP
+                    int option = updateMenu(fElem, rElem);
+                    if(option == -1) mode = -1;
+
+                    updateFuncSwitch(option, food, &fElem, recipes, &rElem);
+                }
                 break;
             }
             
@@ -458,5 +472,4 @@ void menuSwitch() {
         
         moveDisplay();
     }
-    
 }

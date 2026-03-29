@@ -2,8 +2,8 @@ void addIngredients(ingredient INGREDIENT[], int *TOTAL, int MAX, int INDENT) {
     char indent[5] = "";
     if(INDENT) strcpy(indent, "    ");
 
-    char input;
     int ingredientIndex;
+    char input = '\0';
     for(ingredientIndex = *TOTAL; ingredientIndex < MAX && !INPUT_EXIT; ingredientIndex++) {
         printf(
             YLW "%s    Food Item: " GRY " (%d out of %d)\n%s    " RESET, 
@@ -11,9 +11,7 @@ void addIngredients(ingredient INGREDIENT[], int *TOTAL, int MAX, int INDENT) {
         );
 
         if(INDENT) getStringInput(INGREDIENT[ingredientIndex].item, "%20[^\n]s", "\e[1F\e[9G");
-        
         else getStringInput(INGREDIENT[ingredientIndex].item, "%20[^\n]s", "\e[1F\e[5G");
-        
         
         int isUnique = 1;
         do {
@@ -57,18 +55,21 @@ void addIngredients(ingredient INGREDIENT[], int *TOTAL, int MAX, int INDENT) {
         //------------------------------------------
 
         printf(YLW "\n%s    Unit:\n%s    " RESET, indent, indent);
-        if(INDENT) getStringInput(INGREDIENT[ingredientIndex].unit, "%20[^\n]s", "\e[1F\e[9G");
-        else getStringInput(INGREDIENT[ingredientIndex].unit, "%20[^\n]s", "\e[1F\e[5G");
+        if(INDENT) {
+            getStringInput(INGREDIENT[ingredientIndex].unit, "%15[^\n]s", "\e[1F\e[9G");
+            printf("\e[1F\e[24G\t\t\e[0J\n"); 
+        }
+        else {
+            getStringInput(INGREDIENT[ingredientIndex].unit, "%15[^\n]s", "\e[1F\e[5G");
+            printf("\e[1F\e[20G\t\t\e[0J\n"); 
+        }
         clearBuffer();
-        
 
         //------------------------------------------
 
         if(MAX == 50) {
             printf(YLW "\n%s    Calorie Count:\n%s    " RESET, indent, indent);
-            float temp;
-            getNumInput(&temp, "\e[5G" RESET, 0, 1);
-            INGREDIENT[ingredientIndex].calories = (int) temp;
+            getNumInput(&INGREDIENT[ingredientIndex].calories, "\e[5G" RESET, 1, 0);
             clearBuffer();
         }
         
@@ -102,6 +103,9 @@ void addIngredients(ingredient INGREDIENT[], int *TOTAL, int MAX, int INDENT) {
     }
     *TOTAL = ingredientIndex;
 }
+
+
+
 
 void deleteIngredients(ingredient INGREDIENTS[], int *TOTAL) {
     int input = 0;
@@ -149,13 +153,16 @@ void deleteIngredients(ingredient INGREDIENTS[], int *TOTAL) {
 }
 
 
+
+
+//---------------------------------------------------------------------------
+
 void addSteps(char STEPS[15][71], int *R_ELEM, int MAX, int INDENT) {
     char indent[5] = "";
     if(INDENT) strcpy(indent, "    ");
 
-    char input;
-
     int stepIndex = *R_ELEM;
+    char input = '\0';
     for(stepIndex = *R_ELEM; stepIndex < MAX && !INPUT_EXIT; stepIndex++) {
         printf(YLW "\n%s    Step #%d: " GRY "(out of %d)" "\n%s    " RESET, indent, stepIndex + 1, MAX, indent);
 
@@ -185,6 +192,9 @@ void addSteps(char STEPS[15][71], int *R_ELEM, int MAX, int INDENT) {
     }
     *R_ELEM =  stepIndex;
 }
+
+
+
 
 void deleteSteps(char STEPS[15][71], int *R_ELEM) {
     int input = 0;
@@ -233,20 +243,15 @@ void deleteSteps(char STEPS[15][71], int *R_ELEM) {
 }
 
 
-void addRecipe(recipe RECIPES[], int *R_ELEM) {
-    printf(LINE "\nADD RECIPE\n" RESET);
 
-    if(*R_ELEM < 50) {
-        printf(
-            GRY " * Enter dish name, classification, number of servings, list of ingredients, and procedures\n\n" RESET
-        );
-    }
-    else {
-        printf("\n" LINE );
-    }
-    char input;
+
+//---------------------------------------------------------------------------
+
+void addRecipe(recipe RECIPES[], int *R_ELEM) {
+    printf(LINE "\nADD RECIPE\n\n" );
 
     int recipeIndex;
+    char input = '\0';
     for(recipeIndex = *R_ELEM; recipeIndex < 50 && !INPUT_EXIT; recipeIndex++) {
         printf(PRP "    Dish Name: " GRY " (%d out of 50)\n    " RESET, recipeIndex + 1);
         
@@ -361,30 +366,34 @@ void addRecipe(recipe RECIPES[], int *R_ELEM) {
             confirmBack();
         }
 
-        if(INPUT_ENTER) input = ' '; // Resets the input, important to not skip the following classification prompt
+        if(INPUT_ENTER) input = '\0'; // Resets the input, important to not skip the following classification prompt
         
         printf("\e[2F\e[0J");
     }
     *R_ELEM = recipeIndex;
 }
 
+
+
+
 void arrangeRecipeTitle(recipe RECIPES[], int R_ELEM) {
-    recipe temp;
-    
-    int min;
     int sortIndex;
     for(sortIndex = 0; sortIndex < R_ELEM; sortIndex++) {
-        min = sortIndex;
+        int min = sortIndex;
 
         int recipeIndex;
         for(recipeIndex = sortIndex; recipeIndex != R_ELEM - 1; recipeIndex++)
             if(strcmp(RECIPES[min].name, RECIPES[recipeIndex + 1].name) > 0) min = recipeIndex + 1;
         
-        temp = RECIPES[sortIndex];
+        recipe temp = RECIPES[sortIndex];
         RECIPES[sortIndex] = RECIPES[min];
         RECIPES[min] =  temp;
     }
 }
+
+
+
+
 
 void listRecipeTitles(recipe RECIPES[], int R_ELEM, char * COLOUR) {
     int printIndex;
@@ -400,32 +409,38 @@ void listRecipeTitles(recipe RECIPES[], int R_ELEM, char * COLOUR) {
     printf("\n\n\n");
 }
 
+
+
+
 void displayRecipe(recipe RECIPE, ingredient CALORIE[], int C_ELEM) {
-    int calories = addCalories(&RECIPE, CALORIE, C_ELEM);
+    int calories = (int)round(addCalories(&RECIPE, CALORIE, C_ELEM));
         
         printf(
         PRP "    %s\n" RESET
         "        Serving size: %d\n"
-        "        Total calories: %d\n",
+        "        Total calories: ~%d\n",
         RECIPE.name,
         RECIPE.servings,
         calories
     );
         
-    int ingredientIndex;
-
     printf(YLW "\n    Ingredients:\n" RESET );
-    for(ingredientIndex = 0; ingredientIndex < RECIPE.ingredientCount; ingredientIndex++)
+    
+    int ingredientIndex;
+    for(ingredientIndex = 0; ingredientIndex < RECIPE.ingredientCount; ingredientIndex++) {
         printf(
-            "        %g %s %s\e[64G%d calories\n",
+            "        %g %s %s",
             RECIPE.ingredients[ingredientIndex].quantity,
             RECIPE.ingredients[ingredientIndex].unit,
-            RECIPE.ingredients[ingredientIndex].item,
-            RECIPE.ingredients[ingredientIndex].calories
-
+            RECIPE.ingredients[ingredientIndex].item
         );
 
+        if(!RECIPE.ingredients[ingredientIndex].calories) printf(GRY "\e[64G%g calories\n" RESET, RECIPE.ingredients[ingredientIndex].calories);
+        else printf("\e[64G%g calories\n", RECIPE.ingredients[ingredientIndex].calories);
+    }
+
     printf(YLW "\n    Procedures:\n" RESET);
+
     int stepIndex;
     for(stepIndex = 0; stepIndex < RECIPE.stepCount; stepIndex++)
         printf(
@@ -437,10 +452,13 @@ void displayRecipe(recipe RECIPE, ingredient CALORIE[], int C_ELEM) {
     printf("\n\n");
 }
 
+
+
+
 void scanRec(recipe RECIPES[], int R_ELEM, ingredient CALORIE[], int C_ELEM) {
     int page = 1;
     
-    char input;
+    char input = '\0';
     while(!INPUT_EXIT) {
         printf(
             LINE "\n    SCAN RECIPES\n\n"
@@ -474,6 +492,9 @@ void scanRec(recipe RECIPES[], int R_ELEM, ingredient CALORIE[], int C_ELEM) {
 
     printf("\n");
 }
+
+
+
 
 void scanRecByIngredient(recipe RECIPES[], int R_ELEM, ingredient CALORIE[], int C_ELEM) {
     printf(LINE "\nSCAN RECIPES BY INGREDIENT\n\n");
@@ -551,6 +572,9 @@ void scanRecByIngredient(recipe RECIPES[], int R_ELEM, ingredient CALORIE[], int
     }
 }
 
+
+
+
 // returns the index of the matching recipe
 int checkRecipe(recipe RECIPES[], int R_ELEM) {
     listRecipeTitles(RECIPES, R_ELEM, PRP);
@@ -560,6 +584,7 @@ int checkRecipe(recipe RECIPES[], int R_ELEM) {
     getStringInput(search,"%20[^\n]s", "\e[1F\e[5G");
 
     int index = 0;
+
     int recipeExists = 0;
     while(!recipeExists) {
         for(; index < R_ELEM && !recipeExists; index++)
@@ -581,8 +606,10 @@ int checkRecipe(recipe RECIPES[], int R_ELEM) {
 }
 
 
+
+
 void deleteRec(recipe RECIPES[], int *R_ELEM) {
-    char input;
+    char input = '\0';
     while (!INPUT_EXIT && *R_ELEM != 0) {
         printf(LINE "\nDELETE RECIPES\n\n");
 
@@ -592,7 +619,6 @@ void deleteRec(recipe RECIPES[], int *R_ELEM) {
         int shiftIndex;
         for(shiftIndex = index; shiftIndex < *R_ELEM; shiftIndex++) 
             RECIPES[shiftIndex] = RECIPES[shiftIndex + 1];
-
 
         (*R_ELEM)--;
 
@@ -619,10 +645,14 @@ void deleteRec(recipe RECIPES[], int *R_ELEM) {
     }
 }
 
+
+
+
 void searchRec(recipe RECIPES[], int R_ELEM, ingredient CALORIE[], int C_ELEM) {
     printf(LINE "\nSEARCH RECIPE BY TITLE\n\n");
 
     int index = checkRecipe(RECIPES, R_ELEM);
+    clearBuffer();  
     
     printf("\n" LINE2 "\n\n");
     displayRecipe(RECIPES[index], CALORIE, C_ELEM);
@@ -630,14 +660,15 @@ void searchRec(recipe RECIPES[], int R_ELEM, ingredient CALORIE[], int C_ELEM) {
     printf(GRY" * [ X ] Return update menu\n" RESET);
     
     confirmBack();
-    clearBuffer();  
 }
+
+
 
 
 void exportRec(recipe RECIPES[], int R_ELEM) {
     printf(LINE "\nEXPORT RECIPES\n\n");
 
-    filename fileName;
+    char fileName[21];
     if(checkFileExists(fileName, 1)) {
         printf(GRN "    [O] File saved successfully!" RESET);
 
@@ -692,17 +723,18 @@ void exportRec(recipe RECIPES[], int R_ELEM) {
 }
 
 
+
+
 void importRec(recipe RECIPES[], int *R_ELEM) {
     printf(LINE "\nIMPORT RECIPES\n\n");
 
-    filename fileName;
+    char fileName[21];
     if(checkFileExists(fileName, 0)) {
         printf(GRN "    [O] File opened successfully!\n\n\n" RESET);
 
         FILE *file;
         if((file = fopen(fileName, "r"))) { 
             recipe temp;
-
 
             while(
                 fscanf(
@@ -715,6 +747,7 @@ void importRec(recipe RECIPES[], int *R_ELEM) {
                 ) == 3
                 && *R_ELEM < 50
             ) {
+
                 fscanf(file, "Ingredients %d\n", &temp.ingredientCount);
 
                 int recIndex;

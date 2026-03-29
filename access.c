@@ -51,7 +51,8 @@ void genereateShopList(recipe RECIPES[], int R_ELEM) {
         for(index = 0; index < listSize; index++) {
             int ingredientIndex;
             for(ingredientIndex = 0; ingredientIndex < temp[index].ingredientCount; ingredientIndex++) {
-                temp[index].ingredients[ingredientIndex].quantity = calculateServingSize(temp[index].ingredients[ingredientIndex].quantity, temp[index].servings, input);
+
+                temp[index].ingredients[ingredientIndex].quantity = calculateNewAmount(temp[index].ingredients[ingredientIndex].quantity, temp[index].servings, input);
 
                 printf(
                     YLW "        %d)" RESET " %g %s %s\n\n",
@@ -68,6 +69,9 @@ void genereateShopList(recipe RECIPES[], int R_ELEM) {
     confirmBack();
 }
 
+
+
+
 void recommendMenu(recipe RECIPES[], int R_ELEM, ingredient CALORIE[], int C_ELEM) {
     printf(
         LINE "\nRECOMMEND MENU\n\n"
@@ -78,7 +82,7 @@ void recommendMenu(recipe RECIPES[], int R_ELEM, ingredient CALORIE[], int C_ELE
     getIntInput(&input, "\e[5G" RESET, 0, 1);
     clearBuffer();
 
-    int calorieGoal = input;
+    float calorieGoal = input;
     
     recipe temp[51];
 
@@ -101,11 +105,11 @@ void recommendMenu(recipe RECIPES[], int R_ELEM, ingredient CALORIE[], int C_ELE
             
             int ingredientIndex;
             for(ingredientIndex = 0; ingredientIndex < temp[50].ingredientCount; ingredientIndex++) {
-                temp[50].ingredients[ingredientIndex].quantity = calculateServingSize(temp[50].ingredients[ingredientIndex].quantity, temp[50].servings, 1);
+                temp[50].ingredients[ingredientIndex].quantity = calculateNewAmount(temp[50].ingredients[ingredientIndex].quantity, temp[50].servings, 1);
             }
             temp[50].servings = 1;
                 
-            int calories = addCalories(&temp[50], CALORIE, C_ELEM);
+            float calories = addCalories(&temp[50], CALORIE, C_ELEM);
             
             if(!strcmp(temp[50].classification, classification[index]) && calories <= calorieGoal) {
                 temp[tempCount] = temp[50];
@@ -117,7 +121,7 @@ void recommendMenu(recipe RECIPES[], int R_ELEM, ingredient CALORIE[], int C_ELE
             int chosenIndex = 0;
             if(tempCount > 1) chosenIndex = rng(tempCount);
             
-            int calories = addCalories(&temp[chosenIndex], CALORIE, C_ELEM);
+            float calories = addCalories(&temp[chosenIndex], CALORIE, C_ELEM);
             final[finalCount] = temp[chosenIndex];
             finalCount++;
             
@@ -135,9 +139,9 @@ void recommendMenu(recipe RECIPES[], int R_ELEM, ingredient CALORIE[], int C_ELE
 
     printf(
         "\n" LINE2 "\n"
-        "    Suggested Menu......Total Calories %d~\n"
+        "    Suggested Menu with ~%d total calories\n"
         "\n" LINE2 "\n\n",
-        input-calorieGoal
+        (int)round(input-calorieGoal)
     );
 
     for(index = 0; index < finalCount; index ++) {

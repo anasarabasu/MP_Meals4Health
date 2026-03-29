@@ -1,18 +1,8 @@
-void addCalInfo(ingredient FOOD[], int *F_ELEM) {
-    printf(LINE "\nADD CALORIE INFO\n" RESET); 
-
-    if(*F_ELEM < 50) {
-        printf(GRY " * Enter food item, quantity, unit, and calorie count\n\n" RESET);
-        addIngredients(FOOD, F_ELEM, 50, 0);
-    }
-}
-
 void viewCalInfo(ingredient FOOD[], int F_ELEM) {    
-    char input;
-
     int rows = F_ELEM;
     int displayOffset = 0;
     
+    char input = '\0';
     while(!INPUT_EXIT) {
         printf(LINE "\nVIEW CALORIE INFO\n\n");
         
@@ -34,7 +24,7 @@ void viewCalInfo(ingredient FOOD[], int F_ELEM) {
         int displayIndex;
         for(displayIndex = 0; displayIndex < 10 && displayIndex != rows; displayIndex++) 
         printf(
-            " |  %02d  |    %-20s    ||    %-19g    ||    %-15s    ||    %-19d    |\n"
+            " |  %02d  |    %-20s    ||    %-19g    ||    %-15s    ||    %-19g    |\n"
             " |      |    %-20s    ||    %-19s    ||    %-15s    ||    %-19s    |\n"
             LINE2, 
             displayIndex + 1 + displayOffset,
@@ -72,10 +62,13 @@ void viewCalInfo(ingredient FOOD[], int F_ELEM) {
     printf("\n");
 }
 
+
+
+
 void saveCal(ingredient FOOD[], int F_ELEM) {
     printf(LINE "\nSAVE CALORIE INFO\n\n");
 
-    filename fileName;
+    char fileName[21];
     if(checkFileExists(fileName, 1)) {
         printf(GRN "\n    [O] File saved successfully!" RESET);
 
@@ -86,7 +79,7 @@ void saveCal(ingredient FOOD[], int F_ELEM) {
                 fprintf(
                     file, 
                     "%s\n"
-                    "%g %s %d\n\n",
+                    "%g %s %g\n\n",
                     FOOD[index].item,
                     FOOD[index].quantity,
                     FOOD[index].unit,
@@ -103,10 +96,12 @@ void saveCal(ingredient FOOD[], int F_ELEM) {
 }
 
 
+
+
 void loadCal(ingredient FOOD[], int *F_ELEM) {
     printf(LINE "\nLOAD CALORIE INFO\n\n");
 
-    filename fileName;
+    char fileName[21];
     if(checkFileExists(fileName, 0)) {
         printf(GRN "    [O] File opened successfully!\n\n\n" RESET);
 
@@ -118,7 +113,7 @@ void loadCal(ingredient FOOD[], int *F_ELEM) {
                 fscanf(
                     file,
                     "%[^\n]"
-                    "%f %s %d\n\n",
+                    "%f %s %g\n\n",
                     temp.item,
                     &temp.quantity,
                     temp.unit,
@@ -148,10 +143,10 @@ void loadCal(ingredient FOOD[], int *F_ELEM) {
                             string display[2] = {
                                 "OLD\n"
                                 "        %s\n"
-                                "        %g %s %d\n\n",
+                                "        %g %s %g\n\n",
                                 "NEW\n"
                                 "        %s\n"
-                                "        %g %s %d\n\n",
+                                "        %g %s %g\n\n",
                             };
                             
                             int displayIndex;
@@ -187,7 +182,7 @@ void loadCal(ingredient FOOD[], int *F_ELEM) {
                 if(itemExists) {
                     printf(
                         "    %s\n"
-                        "    %g %s %d\n\e[0J",
+                        "    %g %s %g\n\e[0J",
                         temp.item,
                         temp.quantity,
                         temp.unit,
@@ -212,6 +207,4 @@ void loadCal(ingredient FOOD[], int *F_ELEM) {
     
     printf(GRY"\n * [ X ]  Return to menu\n" RESET);
     confirmBack();
-
 }
-
