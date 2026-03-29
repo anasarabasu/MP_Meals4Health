@@ -19,14 +19,12 @@ void genereateShopList(recipe RECIPES[], int R_ELEM) {
         if(input > R_ELEM) printf(RED "\e[1F\e[0J\e[20G\t\t[!] Please enter a valid recipe number\n");
         else {
             int isDuplicate = 0;
-            int existsIndex = 0;
-            while(existsIndex < listSize && !isDuplicate) {
+            int existsIndex;
+            for(existsIndex = 0; existsIndex < listSize && !isDuplicate; existsIndex++)
                 if(!strcmp(temp[existsIndex].name, RECIPES[input-1].name)) {
                     printf(RED "\e[1F\e[0J\e[20G\t\t[!] This item already exists\n");
                     isDuplicate++;
                 }
-                existsIndex++;
-            }
 
             if(!isDuplicate && input) {
                 printf("\e[1F\e[5G%d - %s\n\n", input, RECIPES[input-1].name);
@@ -49,48 +47,113 @@ void genereateShopList(recipe RECIPES[], int R_ELEM) {
             "    Shopping List\n\n"
         );
 
-        int index = 0;
-        while(index < listSize) {
-            int ingredientIndex = 0;
-            while(ingredientIndex < temp[index].ingredientCount) {
+        int index;
+        for(index = 0; index < listSize; index++) {
+            int ingredientIndex;
+            for(ingredientIndex = 0; ingredientIndex < temp[index].ingredientCount; ingredientIndex++) {
                 temp[index].ingredients[ingredientIndex].quantity = calculateServingSize(temp[index].ingredients[ingredientIndex].quantity, temp[index].servings, input);
 
                 printf(
-                    "        %d) %f %s %s\n",
+                    YLW "        %d)" RESET " %g %s %s\n\n",
                     ingredientIndex+1,
                     temp[index].ingredients[ingredientIndex].quantity,
                     temp[index].ingredients[ingredientIndex].unit,
                     temp[index].ingredients[ingredientIndex].item
                 );
-
-                ingredientIndex++;
             }
-            index++;
         }
-
-        printf("save?");
-        getch();
     }
 
     printf(GRY"\n * [ X ] Return to menu\n" RESET);
     confirmBack();
 }
 
-void recommenMenu(recipe RECIPES[], int R_ELEM) {
+void recommendMenu(recipe RECIPES[], int R_ELEM, ingredient CALORIE[], int C_ELEM) {
     printf(
         LINE "\nRECOMMEND MENU\n\n"
         YLW "    Enter target calorie intake:\n    " RESET
     );
 
-    int input = 0;
+    int input;
     getIntInput(&input, "\e[5G" RESET, 0, 1);
-    
     clearBuffer();
 
-    if(input) {
+    int calorieGoal = input;
+    
+    recipe temp[51];
 
-        printf("save?");
-        getch();
+    recipe final[3];
+    int finalCount = 0;
+    
+    char classification[3][8] = {
+        "Main",
+        "Starter",
+        "Dessert"
+    };
+
+    int index;
+    for(index = 0; index < 3; index++) {
+        int tempCount = 0;
+        
+        int recipeIndex;
+        for(recipeIndex = 0; recipeIndex < R_ELEM; recipeIndex++) { //MAIN
+            temp[50] = RECIPES[recipeIndex];
+            
+            int ingredientIndex;
+            for(ingredientIndex = 0; ingredientIndex < temp[50].ingredientCount; ingredientIndex++) {
+                temp[50].ingredients[ingredientIndex].quantity = calculateServingSize(temp[50].ingredients[ingredientIndex].quantity, temp[50].servings, 1);
+            }
+            temp[50].servings = 1;
+                
+            int calories = addCalories(&temp[50], CALORIE, C_ELEM);
+            
+            if(!strcmp(temp[50].classification, classification[index]) && calories <= calorieGoal) {
+                temp[tempCount] = temp[50];
+                tempCount++;
+            }
+        }
+        
+        if(tempCount) {
+            int chosenIndex = 0;
+            if(tempCount > 1) chosenIndex = rng(tempCount);
+            
+            int calories = addCalories(&temp[chosenIndex], CALORIE, C_ELEM);
+            final[finalCount] = temp[chosenIndex];
+            finalCount++;
+            
+            calorieGoal -= calories;
+        }
+
+    }
+    
+    if(!strcmp(final[1].classification, "Starter")) {
+        temp[0] = final[0];
+        final[0] = final[1];
+        final[1] = temp[0];
+    }
+
+
+    printf(
+        "\n" LINE2 "\n"
+        "    Suggested Menu......Total Calories %d~\n"
+        "\n" LINE2 "\n\n",
+        input-calorieGoal
+    );
+
+    for(index = 0; index < finalCount; index ++) {
+        printf("  >>> %s <<<\n\n", final[index].classification);
+        displayRecipe(final[index], CALORIE, C_ELEM);
+        printf("\n");
+
+        if(index < finalCount-1) {
+            printf(GRY " * [ ENTER ] to show next dish\e[1G" RESET);
+            
+            char input = getch();
+            while(!INPUT_ENTER)
+            input = getch();
+        }
+
+        CLEAN
     }
 
     printf(GRY"\n * [ X ] Return to menu\n" RESET);

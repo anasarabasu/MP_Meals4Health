@@ -1,6 +1,135 @@
-food
-12 whole eggs
+salmon
+1 whole 240
 
-tomato shit
-2 whole tomatoes
+cod
+2 ounce 340
+
+oil
+3 tablespoon 50
+
+tomato
+4 whole 112
+
+garlic powder
+5 pinch 30
+
+spinach
+6 cup 50
+
+onion
+7 tablespoon 24
+
+cheese
+8 slice 24
+
+pasta
+9 ounce 340
+
+garlic
+10 cloves 32
+
+chicken
+11 whole 250
+
+pesto
+12 cup 128
+
+potatoes
+13 whole 214
+
+honey
+14 tablespoon 222
+
+broccoli
+15 cups 42
+
+carrot
+16 whole 61
+
+bell pepper
+17 whole 119
+
+mushroom
+18 cup 70
+
+egg
+19 whole 72
+
+milk
+20 cup 103
+
+butter
+21 tablespoon 102
+
+shrimp
+22 ounce 99
+
+beef
+23 ounce 250
+
+rice
+24 cup 206
+
+cucumber
+25 whole 45
+
+zucchini
+26 whole 33
+
+eggplant
+27 whole 137
+
+corn
+28 cup 132
+
+peas
+29 cup 117
+
+beans
+30 cup 227
+
+lettuce
+31 cup 5
+
+lemon
+32 whole 17
+
+lime
+33 whole 20
+
+soy sauce
+34 tablespoon 10
+
+vinegar
+35 tablespoon 3
+
+yogurt
+36 cup 149
+
+cream
+37 cup 821
+
+basil
+38 tablespoon 1
+
+parsley
+39 tablespoon 1
+
+oregano
+40 teaspoon 1
+
+thyme
+41 teaspoon 1
+
+chili flakes
+42 teaspoon 6
+
+paprika
+43 teaspoon 6
+
+cumin
+44 teaspoon 8
+
+turmeric
+45 teaspoon 8
 

@@ -9,9 +9,11 @@ students and/or persons, nor did I employ the use of AI in any part of the deliv
 *********************************************************************************************************/
 
 #include <conio.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <windows.h>
 
 
@@ -125,25 +127,22 @@ int getStringInput(char * STRING, char * IDENTIFIER, char * POS) {
     int length = strlen(STRING);
     if(length > 0) {
         // remove left-hand spaces
-        int index = 0;
-        while(STRING[index] == ' ') index++;
+        int index;
+        for(index = 0; STRING[index] == ' '; index++);
 
-        int offset = 0;
-        while(STRING[offset + index] != '\0') {
+        int offset;
+        for(offset = 0; STRING[offset + index] != '\0'; offset++) 
             STRING[offset] = STRING[offset + index];
-            offset++;
-        }
+
         STRING[offset] = '\0';
 
         // remove right-hand spaces
-        index = length - 1;
-        while(STRING[index] == ' ') index--;
+        for(index = length-1; STRING[index] == ' '; index--);
         STRING[index + 1] = '\0';
         
         // validate not empty
         length = strlen(STRING);
         if(length) isValid = 1;
-
     }
 
     if(!isValid) {
@@ -171,6 +170,7 @@ int getNumInput(float *NUM, char *POS, int ZERO_INC, int returnInt) {
         // moves cursor back to previous position using escape characters
         if(ch == '\n') printf("\e[1F%s", POS);
         if(ch == ' ') printf(POS); 
+
         ch = getchar();
     }
     ungetc(ch, stdin); // puts back the char to the input stream
@@ -201,10 +201,10 @@ int getNumInput(float *NUM, char *POS, int ZERO_INC, int returnInt) {
         }
     }
 
-    if(!ZERO_INC && *NUM <= 0) {
+    if(!ZERO_INC && *NUM <= 0 || *NUM < 0) {
         clearBuffer();
 
-        printf("\e[1F\e[0J\e[20G\t\t" RED "[!] Please enter a valid amount%s" RESET, POS);
+        printf("\e[1F\e[0J\e[20G\t\t" RED "[!] Please enter a valid amount%s" RESET, POS, *NUM);
         isValid = getNumInput(NUM, POS, ZERO_INC, returnInt);
     }
 
@@ -283,6 +283,32 @@ double calculateServingSize(float QUANTITY, float ORIGINAL, float NEW) {
     return QUANTITY * scale;
 }
 
+int calculateCalories(int CALORIE, float BASIS, float QUANTITY) {
+    double scale = 0;
+    if(BASIS) scale = QUANTITY / BASIS;
+
+    return (int)round(CALORIE * scale);
+}
+
+int addCalories(recipe *RECIPE, ingredient CALORIE[], int C_ELEM) {
+    int calories = 0;
+    int ingredientIndex;
+    for(ingredientIndex = 0; ingredientIndex < RECIPE->ingredientCount; ingredientIndex++) {
+        RECIPE->ingredients[ingredientIndex].calories = 0;
+
+        int calorieIndex;
+        for(calorieIndex = 0; calorieIndex < C_ELEM; calorieIndex++) {
+
+            if(!strcmp(CALORIE[calorieIndex].item, RECIPE->ingredients[ingredientIndex].item)) 
+                RECIPE->ingredients[ingredientIndex].calories = calculateCalories(CALORIE[calorieIndex].calories, CALORIE[calorieIndex].quantity, RECIPE->ingredients[ingredientIndex].quantity);
+        }
+
+        calories += RECIPE->ingredients[ingredientIndex].calories;
+    }
+    
+    return calories;
+}
+
 // DISPLAY -----------------------------------------------------------------------------------------
 
 
@@ -310,17 +336,24 @@ void moveDisplay() {
     printf(" ");
 
     int space; 
-    for(space = 0; space <= 24; space++) printf("\n");
+    for(space = 0; space <= 64; space++) printf("\n");
 
     TOP
     CLEAN
 }
 
 void confirmBack() {
+    CURSOR_POS
+
     char input;
     input = getch();
     while(!INPUT_EXIT) 
         input = getch();
+}
+
+int rng(int RANGE) {
+    int random = rand() % RANGE;
+    return random;
 }
 
 #include "recipes.c"
@@ -329,8 +362,10 @@ void confirmBack() {
 #include "menus.c"
 
 int main() {
+	srand(time(NULL)); // fixes persistent rand;
+
     system("cls");
-    
+
     menuSwitch();
 
     printf(" >>> Program terminated\n");

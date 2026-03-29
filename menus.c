@@ -1,15 +1,18 @@
-int modRecMenu(recipe RECIPE) {
+int modRecMenu(recipe RECIPE, ingredient CALORIE[], int C_ELEM) {
     int option = 0;
     string options[5] = {
-        "Add Ingredient",
-        "Add Step\n",
-        "Delete Ingredient",
-        "Delete Step\n",
+        "Add Ingredients",
+        "Add Steps\n",
+        "Delete Ingredients",
+        "Delete Steps\n",
         "Return to Update Menu"
     };
 
-    if(RECIPE.ingredientCount == 1) strcpy(options[2], GRY "Delete Ingredient    " RESET RED "[!] User is not allowed to delete all ingredients");
-    if(RECIPE.stepCount == 1) strcpy(options[3], GRY "Delete Step    " RESET RED "[!] User is not allowed to delete all steps\n");
+    if(RECIPE.ingredientCount == 50) strcpy(options[0], GRY "( FULL ) Add Ingredients" RESET);
+    if(RECIPE.stepCount == 15) strcpy(options[1], GRY "( FULL ) Add Steps\n" RESET);
+    
+    if(RECIPE.ingredientCount == 1) strcpy(options[2], GRY "Delete Ingredients    " RESET RED "[!] User is not allowed to delete all ingredients");
+    if(RECIPE.stepCount == 1) strcpy(options[3], GRY "Delete Steps    " RESET RED "[!] User is not allowed to delete all steps\n");
     
     moveDisplay();
 
@@ -20,7 +23,7 @@ int modRecMenu(recipe RECIPE) {
 
         printf(LINE "\nMODIFY RECIPE\n\n");
         
-        displayRecipe(RECIPE);
+        displayRecipe(RECIPE, CALORIE, C_ELEM);
         printf(LINE2 "\n");
         
         option = selectionLooper(option, 4);
@@ -45,19 +48,13 @@ int modRecMenu(recipe RECIPE) {
     return option;
 }
 
-void modRecSwitch(recipe RECIPES[], int R_ELEM) {
+void modRecSwitch(recipe RECIPES[], int R_ELEM, ingredient CALORIE[], int C_ELEM) {
     printf(LINE "\nMODIFY RECIPE\n\n");
 
     int recipeIndex = checkRecipe(RECIPES, R_ELEM);
-    
-    displayRecipe(RECIPES[recipeIndex]);
-    printf(LINE2);
-    
     clearBuffer();
-    TOP
-    CLEAN
 
-    int option = modRecMenu(RECIPES[recipeIndex]);
+    int option = modRecMenu(RECIPES[recipeIndex], CALORIE, C_ELEM);
     while(option != 4) {
         moveDisplay();
 
@@ -83,7 +80,7 @@ void modRecSwitch(recipe RECIPES[], int R_ELEM) {
             break;
         }
         
-        option = modRecMenu(RECIPES[recipeIndex]);
+        option = modRecMenu(RECIPES[recipeIndex], CALORIE, C_ELEM);
     }
 }
 
@@ -129,12 +126,7 @@ int logIn() {
         );
     }
 
-    CURSOR_POS
-
-    char input = getch();
-    while(!INPUT_EXIT)
-        input = getch();
-
+    confirmBack();
     moveDisplay();
 
     return canProceed;
@@ -143,7 +135,6 @@ int logIn() {
 
 int updateMenu(int F_ELEM, int R_ELEM) {
     int option = 0;
-    option = 11;
     string options[13] = {
         /* 00 */ "Add Food-Calorie Info",
         /* 01 */ "View Food-Calorie Chart",
@@ -157,7 +148,7 @@ int updateMenu(int F_ELEM, int R_ELEM) {
         /* 08 */ "Scan Recipes",
         /* 09 */ "Search Recipe by Title",
         /* 10 */ "Export Recipes",
-        /* 11 */ GRY "Import Recipes\n",
+        /* 11 */ "Import Recipes\n",
         
         /* 12 */ "Return to Main Menu"
     };
@@ -167,7 +158,10 @@ int updateMenu(int F_ELEM, int R_ELEM) {
         strcpy(options[2], GRY "( NO DATA )  Save Calorie Info");
         
     }
-    if(F_ELEM == 50) strcpy(options[3], GRY "( FULL )  Load Calorie Info\n");
+    if(F_ELEM == 50) {
+        strcpy(options[0], GRY "( FULL )  Add Food-Calorie Info");
+        strcpy(options[3], GRY "( FULL )  Load Calorie Info\n");
+    }
     
     if(!R_ELEM) {
         strcpy(options[5], GRY "( NO DATA )  Modify Recipe");
@@ -177,7 +171,10 @@ int updateMenu(int F_ELEM, int R_ELEM) {
         strcpy(options[9], GRY "( NO DATA )  Search Recipe by Title");
         strcpy(options[10], GRY "( NO DATA )  Export Recipes");
     }
-    if(R_ELEM == 50) strcpy(options[11], GRY "( FULL )  Import Recipes\n");
+    if(R_ELEM == 50) {
+        strcpy(options[4], GRY "( FULL )  Add Recipe");
+        strcpy(options[11], GRY "( FULL )  Import Recipes\n");
+    }
     
     char input;
     while(!INPUT_ENTER) {
@@ -229,9 +226,10 @@ void updateFuncSwitch(int OPTION, ingredient FOOD[], int *F_ELEM, recipe RECIPES
         // REC 
         case 4: 
             addRecipe(RECIPES, R_ELEM);
+            arrangeRecipeTitle(RECIPES, *R_ELEM);
             break;
         case 5: 
-            if(*R_ELEM) modRecSwitch(RECIPES, *R_ELEM);
+            if(*R_ELEM) modRecSwitch(RECIPES, *R_ELEM, FOOD, *F_ELEM);
             break;
         case 6: 
             if(*R_ELEM) deleteRec(RECIPES, R_ELEM);
@@ -242,22 +240,24 @@ void updateFuncSwitch(int OPTION, ingredient FOOD[], int *F_ELEM, recipe RECIPES
             if(*R_ELEM) {
                 listRecipeTitles(RECIPES, *R_ELEM, PRP);
 
-                CURSOR_POS
                 printf(GRY " * [ X ] Return to menu\n" RESET);
                 confirmBack();
             }
             break;
         case 8: 
-            if(*R_ELEM) scanRec(RECIPES, *R_ELEM);
+            if(*R_ELEM) scanRec(RECIPES, *R_ELEM, FOOD, *F_ELEM);
             break;
         case 9: 
-            if(*R_ELEM) searchRec(RECIPES, *R_ELEM);
+            if(*R_ELEM) searchRec(RECIPES, *R_ELEM, FOOD, *F_ELEM);
             break;
         case 10: 
             if(*R_ELEM) exportRec(RECIPES, *R_ELEM);
             break;
         case 11: 
-            if(*R_ELEM != 50) importRec(RECIPES, R_ELEM);
+            if(*R_ELEM != 50) {
+                importRec(RECIPES, R_ELEM);
+                arrangeRecipeTitle(RECIPES, *R_ELEM);
+            }
             break;
     }
 }
@@ -266,10 +266,9 @@ void updateFuncSwitch(int OPTION, ingredient FOOD[], int *F_ELEM, recipe RECIPES
 
 int accessMenu(int R_ELEM) {
     int option = 0;
-    option = 6;
     string options[9] = {
         /* 00 */ "Load Calorie Info",
-        /* 01 */ GRY "Import Recipes\n",
+        /* 01 */ "Import Recipes\n",
 
         /* 02 */ "List Recipe Titles",
         /* 03 */ "Search Recipe by Title",
@@ -329,6 +328,9 @@ void accessFuncSwitch(int OPTION, ingredient FOOD[], int *F_ELEM, recipe RECIPES
             loadCal(FOOD, F_ELEM);
             break;
         case 1: 
+            importRec(RECIPES, R_ELEM);
+            arrangeRecipeTitle(RECIPES, *R_ELEM);
+
             break;
         case 2: 
             printf(LINE "\nLIST RECIPE TITLES\n\n");
@@ -336,25 +338,25 @@ void accessFuncSwitch(int OPTION, ingredient FOOD[], int *F_ELEM, recipe RECIPES
             if(*R_ELEM) {
                 listRecipeTitles(RECIPES, *R_ELEM, PRP);
 
-                CURSOR_POS
                 printf(GRY " * [ X ] Return to menu\n" RESET);
                 confirmBack();
             }
             break;
         case 3: 
-            if(*R_ELEM) searchRec(RECIPES, *R_ELEM);
+            if(*R_ELEM) searchRec(RECIPES, *R_ELEM, FOOD, *F_ELEM);
             break;
         case 4: 
-            if(*R_ELEM) scanRec(RECIPES, *R_ELEM);
+            if(*R_ELEM) scanRec(RECIPES, *R_ELEM, FOOD, *F_ELEM);
             break;
         case 5: 
-            if(*R_ELEM) scanRecByIngredient(RECIPES, *R_ELEM);
+            if(*R_ELEM) scanRecByIngredient(RECIPES, *R_ELEM, FOOD, *F_ELEM);
             break;
         case 6: 
             if(*R_ELEM) genereateShopList(RECIPES, *R_ELEM);
             break;
         case 7: 
-            if(*R_ELEM && *F_ELEM) recommenMenu(RECIPES, *R_ELEM);
+            // if(*R_ELEM && *F_ELEM) 
+            recommendMenu(RECIPES, *R_ELEM, FOOD, *F_ELEM);
             break;
     }
 }
@@ -406,38 +408,31 @@ void menuSwitch() {
     int fElem = 0;
 
     recipe recipes[50];
-    int rElem = 3;
+    int rElem = 0;
 
-    strcpy(recipes[0].name, "1");
-    recipes[0].ingredientCount = 1;
-    strcpy(recipes[0].ingredients[0].item, "1");
-
-    strcpy(recipes[1].name, "2");
-    recipes[1].ingredientCount = 1;
-    strcpy(recipes[1].ingredients[0].item, "2");
-
-    strcpy(recipes[2].name, "3");
-    recipes[2].ingredientCount = 1;
-    strcpy(recipes[2].ingredients[0].item, "1");
+    int isLogged = 0;
+    
     int mode = -1;
-    mode = 0;
-
     while(mode != -2) { 
         switch(mode) { 
             case -1: 
                 mode = mainMenu();
 
                 // reset
-                // fElem = 0;
-                // rElem = 0;
+                fElem = 0;
+                rElem = 0;
+                isLogged = 0;
                 break;
             case 0: {
-                // mode = logIn();
+                // if(!isLogged) mode = logIn();
 
                 TOP
                 
                 int option = 0;
-                if(!mode) option = updateMenu(fElem, rElem);
+                if(!mode) {
+                    option = updateMenu(fElem, rElem);
+                    isLogged = 1;
+                }
                 if(option == -1) mode = -1;
                 
                 updateFuncSwitch(option, food, &fElem, recipes, &rElem);

@@ -1,15 +1,25 @@
-Salmon
-4 Main 
+Sheet Pan Lemon Art
+4 Main
 Ingredients 5
-2 whole potatoes
-1 tablespoon oil
-2 tablespoon honey
-5 cups broccoli
-4 whole salmon
-Steps 3
-Preheat the oven
-Toss sweet potatoes
-Bake in the preheated
+0.25 cup butter
+2 tablespoons honey
+4 cloves garlic
+0.5 whole lemon
+1 tablespoon parsley
+Steps 2
+Gather all ingredients
+Bring a large pot
+
+Pestorini
+8 Starter
+Ingredients 4
+1 ounce pasta
+2 cloves garlic
+2 whole chicken
+1.5 cup pesto
+Steps 2
+Gather all ingredients
+Bring a large pot
 
 Pesto
 8 Dessert
@@ -23,7 +33,7 @@ Gather all ingredients
 Bring a large pot
 
 Grilled Cod
-1 Starter
+1 Main
 Ingredients 6
 1 ounce cod
 0.25 whole tomato
@@ -32,7 +42,488 @@ Ingredients 6
 1 tablespoon onion
 1 slice cheese
 Steps 1
-Preheat an outdoor
+Preheat an outdoor grill
 
+Garlic Shrimp
+12 Main
+Ingredients 6
+2 ounce pasta
+2 ounce shrimp
+2 tablespoons butter
+3 cloves garlic
+1 tablespoon oil
+1 pinch chili flakes
+Steps 2
+Boil pasta
+Toss shrimp with garlic butter
 
+Chicken Tomato
+13 Main
+Ingredients 6
+1 whole chicken
+2 whole tomato
+2 cloves garlic
+1 tablespoon oil
+1 tablespoon onion
+1 pinch paprika
+Steps 2
+Sear chicken
+Add tomato and cook through
 
+Broccoli Bake
+14 Side
+Ingredients 5
+2 cups broccoli
+1 slice cheese
+1 tablespoon butter
+1 pinch salt
+1 pinch pepper
+Steps 2
+Layer ingredients
+Bake until melted
+
+Beef Mushroom
+15 Main
+Ingredients 6
+3 ounce beef
+1 cup mushroom
+2 cloves garlic
+1 tablespoon oil
+1 tablespoon soy sauce
+1 tablespoon onion
+Steps 2
+Stir fry beef
+Add mushrooms and sauce
+
+Spinach Soup
+16 Starter
+Ingredients 5
+1 cup spinach
+0.5 cup cream
+1 tablespoon butter
+1 clove garlic
+1 pinch thyme
+Steps 2
+Simmer ingredients
+Blend until smooth
+
+Lemon Rice
+17 Main
+Ingredients 5
+1 cup rice
+0.5 whole lemon
+1 tablespoon oil
+1 tablespoon onion
+1 pinch salt
+Steps 2
+Cook rice
+Mix with lemon and seasoning
+
+Honey Carrots
+18 Side
+Ingredients 5
+2 whole carrot
+2 tablespoons honey
+1 tablespoon butter
+1 tablespoon oil
+1 pinch salt
+Steps 1
+Roast until tender
+
+Zucchini Bake
+19 Main
+Ingredients 6
+1 whole zucchini
+2 whole tomato
+1 tablespoon oil
+1 tablespoon cheese
+1 clove garlic
+1 pinch oregano
+Steps 2
+Layer vegetables
+Bake until soft
+
+Egg Rice
+20 Main
+Ingredients 6
+1 cup rice
+2 whole egg
+1 tablespoon oil
+1 tablespoon soy sauce
+1 clove garlic
+1 tablespoon onion
+Steps 2
+Fry rice
+Add eggs and mix
+
+Chicken Wrap
+21 Main
+Ingredients 5
+1 whole chicken
+1 cup pesto
+1 slice cheese
+1 whole cucumber
+1 tablespoon oil
+Steps 2
+Cook chicken
+Assemble wrap
+
+Mushroom Pasta
+22 Main
+Ingredients 6
+2 ounce pasta
+1 cup mushroom
+3 cloves garlic
+1 tablespoon butter
+1 tablespoon oil
+1 tablespoon cheese
+Steps 2
+Cook pasta
+Combine with mushroom sauce
+
+Corn Salad
+23 Side
+Ingredients 5
+1 cup corn
+2 whole tomato
+1 tablespoon onion
+1 tablespoon oil
+0.5 whole lemon
+Steps 1
+Mix all ingredients
+
+Shrimp Spinach
+24 Main
+Ingredients 6
+2 ounce shrimp
+1 cup spinach
+2 cloves garlic
+1 tablespoon oil
+1 tablespoon soy sauce
+1 pinch chili flakes
+Steps 2
+Cook shrimp
+Add spinach and sauce
+
+Beef Stew
+25 Main
+Ingredients 6
+3 ounce beef
+1 whole potato
+1 tablespoon onion
+2 cloves garlic
+1 tablespoon oil
+1 pinch thyme
+Steps 2
+Simmer beef
+Add potatoes and cook
+
+Chicken Soup
+26 Starter
+Ingredients 6
+1 whole chicken
+1 cup broccoli
+0.5 cup cream
+2 cloves garlic
+1 tablespoon onion
+1 pinch pepper
+Steps 2
+Boil ingredients
+Simmer until tender
+
+Basil Pasta
+27 Main
+Ingredients 6
+2 ounce666666666666666 pasta111111111111111
+2 whole tomato
+1 tablespoon oil
+2 tablespoons pesto
+1 clove garlic
+1 tablespoon cheese
+Steps 2
+Cook pasta
+Mix with tomato sauce
+
+Honey Chicken
+28 Main
+Ingredients 6
+1 whole chicken
+2 tablespoons honey
+2 tablespoons soy sauce
+2 cloves garlic
+1 tablespoon oil
+1 pinch paprika
+Steps 2
+Marinate chicken
+Cook until glazed
+
+Veg Omelette
+29 Breakfast
+Ingredients 6
+2 whole egg
+0.5 cup spinach
+0.25 whole bell pepper
+1 tablespoon onion
+1 tablespoon oil
+1 slice cheese
+Steps 2
+Beat eggs
+Cook with vegetables
+
+Lemon Broccoli
+30 Side
+Ingredients 5
+2 cups broccoli
+2 cloves garlic
+1 tablespoon oil
+0.5 whole lemon
+1 pinch salt
+Steps 1
+Steam and season
+
+Chicken Pasta
+31 Main
+Ingredients 6
+2 ounce pasta
+1 whole chicken
+0.5 cup cream
+2 cloves garlic
+1 tablespoon butter
+1 tablespoon cheese
+Steps 2
+Cook pasta
+Mix with creamy chicken sauce
+
+Rice Bowl
+32 Main
+Ingredients 5
+1 cup rice
+1 cup beans
+1 tablespoon onion
+1 tablespoon oil
+1 tablespoon soy sauce
+Steps 2
+Cook rice
+Combine all ingredients
+
+Mushroom Omelet
+33 Breakfast
+Ingredients 6
+2 whole egg
+1 cup mushroom
+0.5 cup spinach
+1 tablespoon butter
+1 slice cheese
+1 pinch pepper
+Steps 2
+Cook filling
+Fold eggs over mixture
+
+Garlic Corn
+34 Side
+Ingredients 5
+1 cup corn
+2 tablespoons butter
+2 cloves garlic
+1 tablespoon oil
+1 pinch salt
+Steps 1
+Sauté until golden
+
+Shrimp Bowl
+35 Main
+Ingredients 6
+2 ounce shrimp
+1 cup rice
+1 tablespoon soy sauce
+2 cloves garlic
+1 tablespoon onion
+1 teaspoon honey
+Steps 2
+Cook shrimp
+Serve over rice
+
+Chicken Stir
+36 Main
+Ingredients 6
+1 whole chicken
+1 cup broccoli
+0.5 whole bell pepper
+2 cloves garlic
+1 tablespoon oil
+1 tablespoon soy sauce
+Steps 2
+Stir fry chicken
+Add vegetables and sauce
+
+Tomato Soup
+37 Starter
+Ingredients 5
+2 whole tomato
+1 tablespoon onion
+2 cloves garlic
+1 tablespoon butter
+1 pinch thyme
+Steps 2
+Simmer ingredients
+Blend smooth
+
+Zucchini Saute
+38 Side
+Ingredients 5
+1 whole zucchini
+2 cloves garlic
+1 tablespoon oil
+1 pinch salt
+1 pinch pepper
+Steps 1
+Sauté until tender
+
+Beef Rice
+39 Main
+Ingredients 6
+3 ounce beef
+1 cup rice
+1 tablespoon soy sauce
+1 tablespoon onion
+2 cloves garlic
+1 tablespoon oil
+Steps 2
+Cook beef
+Mix with rice
+
+Cream Corn
+40 Starter
+Ingredients 5
+1 cup corn
+0.5 cup cream
+1 tablespoon butter
+1 clove garlic
+1 pinch pepper
+Steps 2
+Simmer ingredients
+Blend smooth
+
+Chicken Lemon
+41 Main
+Ingredients 6
+1 whole chicken
+1 cup rice
+0.5 whole lemon
+2 cloves garlic
+1 tablespoon oil
+1 tablespoon onion
+Steps 2
+Cook chicken
+Serve over lemon rice
+
+Broccoli Stir
+42 Main
+Ingredients 6
+1 cup broccoli
+1 cup mushroom
+2 cloves garlic
+1 tablespoon oil
+1 tablespoon soy sauce
+1 pinch chili flakes
+Steps 2
+Stir fry vegetables
+Add sauce
+
+Egg Tomato
+43 Breakfast
+Ingredients 5
+2 whole egg
+2 whole tomato
+1 tablespoon onion
+1 tablespoon oil
+1 pinch salt
+Steps 2
+Cook tomato base
+Add eggs and cook
+
+Honey Potato
+44 Side
+Ingredients 5
+1 whole potato
+2 tablespoons honey
+2 cloves garlic
+1 tablespoon oil
+1 pinch salt
+Steps 1
+Roast until caramelized
+
+Spinach Pasta
+45 Main
+Ingredients 6
+2 ounce pasta
+1 cup spinach
+1 cup mushroom
+2 cloves garlic
+1 tablespoon butter
+1 tablespoon cheese
+Steps 2
+Cook pasta
+Mix with sautéed vegetables
+
+Shrimp Tomato
+46 Main
+Ingredients 5
+2 ounce shrimp
+2 whole tomato
+3 cloves garlic
+1 tablespoon oil
+1 pinch paprika
+Steps 2
+Cook shrimp
+Add tomato sauce
+
+Chicken Corn
+47 Starter
+Ingredients 6
+1 whole chicken
+1 cup corn
+1 tablespoon onion
+2 cloves garlic
+0.5 cup cream
+1 pinch pepper
+Steps 2
+Simmer chicken
+Add corn and cream
+
+Veg Bowl
+48 Main
+Ingredients 5
+1 cup rice
+0.5 cup peas
+0.25 cup carrot
+1 tablespoon oil
+1 tablespoon soy sauce
+Steps 2
+Cook rice
+Mix vegetables in
+
+Beef Stir
+49 Main
+Ingredients 5
+3 ounce beef
+2 cloves garlic
+1 tablespoon oil
+1 tablespoon soy sauce
+1 tablespoon onion
+Steps 2
+Stir fry beef
+Add sauce and onion
+
+Lemon Pasta
+50 Main
+Ingredients 6
+2 ounce pasta
+1 cup spinach
+2 cloves garlic
+0.5 whole lemon
+1 tablespoon butter
+1 tablespoon cheese
+Steps 2
+Cook pasta
+Toss with lemon spinach sauce
